@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trace Écrit - Système Informatique</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ffeaa7 100%);
+            min-height: 100vh;
+            color: #2d3436;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 50%, #fd79a8 100%);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 3rem;
+            box-shadow: 0 8px 32px rgba(108, 92, 231, 0.3);
+        }
+
+        header h1 {
+            color: #ffffff;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        header p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.1rem;
+        }
+
+        .trace-content {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 8px 30px rgba(253, 203, 110, 0.3);
+            border: 3px solid #fdcb6e;
+            margin-bottom: 3rem;
+        }
+
+        .trace-content h2 {
+            color: #6c5ce7;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #fdcb6e;
+            padding-bottom: 1rem;
+        }
+
+        .trace-content h3 {
+            color: #fd79a8;
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .trace-content p {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .trace-content ul, .trace-content ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .trace-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .definition-box {
+            background: linear-gradient(to right, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 5px solid #00b894;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.2);
+        }
+
+        .definition-box strong {
+            color: #00695c;
+        }
+
+        .key-points {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffacc 100%);
+            border: 2px solid #ffd700;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+        }
+
+        .key-points h4 {
+            color: #6c5ce7;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .key-points ul {
+            margin-left: 2rem;
+        }
+
+        .key-points li {
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .vocabulary-section {
+            background: linear-gradient(135deg, #ffe0f0 0%, #ffb3d9 100%);
+            border: 3px solid #ff69b4;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.3);
+        }
+
+        .vocabulary-section h3 {
+            color: #c2185b;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .vocab-table th {
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+            color: white;
+            padding: 1.2rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .vocab-table td {
+            padding: 1rem 1.2rem;
+            border-bottom: 2px solid #ffe0f0;
+            font-size: 0.95rem;
+        }
+
+        .vocab-table tr:hover {
+            background: #fff5f9;
+        }
+
+        .vocab-fr {
+            color: #1976d2;
+            font-weight: 600;
+        }
+
+        .vocab-ar {
+            color: #d32f2f;
+            font-weight: 600;
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+        }
+
+        .vocab-def {
+            color: #555;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .print-section {
+            page-break-inside: avoid;
+            margin-bottom: 2rem;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 180px;
+            padding: 1.2rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(9, 132, 227, 0.4);
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #55efc4 0%, #00b894 100%);
+            color: white;
+        }
+
+        .btn-print:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .buttons {
+                display: none;
+            }
+
+            .trace-content {
+                box-shadow: none;
+                border: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .trace-content {
+                padding: 1.5rem;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .vocab-table {
+                font-size: 0.85rem;
+            }
+
+            .vocab-table td {
+                padding: 0.8rem;
+            }
+        }
+
+        pre {
+            background: #2d3436;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 Trace Écrit</h1>
+            <p>L'essentiel à retenir dans votre cahier</p>
+        </header>
+
+        <div id="traceContent"></div>
+
+        <div class="buttons">
+            <button class="btn btn-back" onclick="closeTraceEcrit()">← Retour à la leçon</button>
+            <button class="btn btn-print" onclick="window.print()">🖨️ Imprimer</button>
+        </div>
+    </div>
+
+    <script>
+        const traces = {
+            rappel: `
+                <div class="trace-content">
+                    <h2>📚 Rappel sur le Système Informatique</h2>
+                    
+                    <h3>1️⃣ Définitions essentielles</h3>
+                    <div class="definition-box">
+                        <p><strong>Informatique :</strong> Science du traitement automatique des informations</p>
+                        <p><strong>Information :</strong> Ensemble de données ayant un sens</p>
+                    </div>
+
+                    <h3>2️⃣ Les formes d'information</h3>
+                    <ul>
+                        <li>📄 <strong>Texte</strong> - Caractères et mots</li>
+                        <li>🖼️ <strong>Image</strong> - Représentation visuelle</li>
+                        <li>📊 <strong>Son</strong> - Données audio</li>
+                        <li>🎥 <strong>Vidéo</strong> - Séquences d'images</li>
+                    </ul>
+
+                    <h3>3️⃣ Le traitement</h3>
+                    <p><strong>Le traitement</strong> est une suite d'opérations permettant de passer d'un état initial à un état final.</p>
+
+                    <div class="key-points">
+                        <h4>✏️ À retenir</h4>
+                        <ul>
+                            <li>L'informatique traite les informations automatiquement</li>
+                            <li>Une information peut être sous plusieurs formes</li>
+                            <li>Le traitement transforme les données en résultats</li>
+                        </ul>
+                    </div>
+
+                    <div class="vocabulary-section">
+                        <h3>📖 Vocabulaire - Rappel sur le Système Informatique</h3>
+                        <table class="vocab-table">
+                            <thead>
+                                <tr>
+                                    <th>Français</th>
+                                    <th>العربية (Arabe)</th>
+                                    <th>Explication</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="vocab-fr">Informatique</td>
+                                    <td class="vocab-ar">المعلوميات</td>
+                                    <td class="vocab-def">Science de traitement des données par ordinateur</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Information</td>
+                                    <td class="vocab-ar">معلومة</td>
+                                    <td class="vocab-def">Donnée ayant une signification</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Traitement</td>
+                                    <td class="vocab-ar">معالجة</td>
+                                    <td class="vocab-def">Suite d'opérations sur les données</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Données</td>
+                                    <td class="vocab-ar">بيانات</td>
+                                    <td class="vocab-def">Éléments d'information bruts</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Automatique</td>
+                                    <td class="vocab-ar">آلي</td>
+                                    <td class="vocab-def">Qui fonctionne sans intervention humaine</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `,
+
+            unite1: `
+                <div class="trace-content">
+                    <h2>💻 Unité 1 : Environnement Système Informatique</h2>
+                    
+                    <h3>1️⃣ Structure d'un ordinateur</h3>
+                    <div class="definition-box">
+                        <p><strong>Un ordinateur</strong> = Unité centrale + Périphériques</p>
+                    </div>
+
+                    <h3>2️⃣ Périphériques de base</h3>
+                    
+                    <h4>📵 Entrée (Input)</h4>
+                    <ul>
+                        <li>⌨️ Clavier - Saisir du texte</li>
+                        <li>🖱️ Souris - Pointer et cliquer</li>
+                        <li>🎮 Manette - Contrôler le jeu</li>
+                        <li>🎤 Microphone - Capturer l'audio</li>
+                    </ul>
+
+                    <h4>📴 Sortie (Output)</h4>
+                    <ul>
+                        <li>🖥️ Écran - Afficher les informations</li>
+                        <li>📊 Haut-parleurs - Diffuser le son</li>
+                        <li>🖨️ Imprimante - Imprimer sur papier</li>
+                        <li>🎧 Casque - Écouter l'audio</li>
+                    </ul>
+
+                    <h3>3️⃣ Composants internes</h3>
+                    <table>
+                        <tr>
+                            <th>Composant</th>
+                            <th>Fonction</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Carte mère</strong></td>
+                            <td>Connecte tous les composants</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Processeur (CPU)</strong></td>
+                            <td>Cerveau de l'ordinateur - exécute les instructions</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RAM</strong></td>
+                            <td>Mémoire temporaire et rapide</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Disque SSD</strong></td>
+                            <td>Stockage permanent des données</td>
+                        </tr>
+                    </table>
+
+                    <h3>4️⃣ Système d'exploitation</h3>
+                    <p><strong>Définition :</strong> Logiciel de base qui gère le matériel d'un ordinateur</p>
+                    <ul>
+                        <li>🪟 Windows</li>
+                        <li>🧊 Linux</li>
+                        <li>🎯 macOS</li>
+                        <li>📱 Android</li>
+                    </ul>
+
+                    <h3>5️⃣ Fichiers et Dossiers</h3>
+                    <ul>
+                        <li><strong>Fichier :</strong> Unité de base de stockage (nom + extension)</li>
+                        <li><strong>Dossier :</strong> Conteneur pour organiser les fichiers</li>
+                        <li><strong>Extension :</strong> Indique le type (.txt, .pdf, .jpg, etc.)</li>
+                    </ul>
+
+                    <h3>6️⃣ Unités de stockage</h3>
+                    <ul>
+                        <li>📹 <strong>1 octet (B)</strong> = 8 bits</li>
+                        <li>📹 <strong>1 kilooctet (kB)</strong> = 1 000 B</li>
+                        <li>📹 <strong>1 mégaoctet (MB)</strong> = 1 000 kB</li>
+                        <li>📹 <strong>1 gigaoctet (GB)</strong> = 1 000 MB</li>
+                        <li>📹 <strong>1 téraoctet (TB)</strong> = 1 000 GB</li>
+                    </ul>
+
+                    <h3>7️⃣ Réseau local (LAN)</h3>
+                    <p><strong>Définition :</strong> Relie plusieurs ordinateurs pour partager fichiers et ressources</p>
+
+                    <h4>Méthodes de connexion</h4>
+                    <ul>
+                        <li>🔌 Filaire (Ethernet)</li>
+                        <li>📡 Sans fil (Wi-Fi)</li>
+                        <li>🌐 Fibre optique</li>
+                    </ul>
+
+                    <div class="key-points">
+                        <h4>✏️ À retenir</h4>
+                        <ul>
+                            <li>Ordinateur = unité centrale + périphériques</li>
+                            <li>Périphériques d'entrée et de sortie</li>
+                            <li>Système d'exploitation gère le matériel</li>
+                            <li>Fichier et dossier organisent les données</li>
+                        </ul>
+                    </div>
+
+                    <div class="vocabulary-section">
+                        <h3>📖 Vocabulaire - Environnement Système Informatique</h3>
+                        <table class="vocab-table">
+                            <thead>
+                                <tr>
+                                    <th>Français</th>
+                                    <th>العربية (Arabe)</th>
+                                    <th>Explication</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="vocab-fr">Périphérique</td>
+                                    <td class="vocab-ar">جهاز طرفي (ملحق خارجي) </td>
+                                    <td class="vocab-def">Équipement connecté à l'ordinateur</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Processeur (CPU)</td>
+                                    <td class="vocab-ar">معالج</td>
+                                    <td class="vocab-def">Cerveau de l'ordinateur</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">RAM</td>
+                                    <td class="vocab-ar">الذاكرة العشوائية</td>
+                                    <td class="vocab-def">Mémoire temporaire et rapide</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Stockage</td>
+                                    <td class="vocab-ar">التخزين</td>
+                                    <td class="vocab-def">Sauvegarde permanente des données</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Extension</td>
+                                    <td class="vocab-ar">الامتداد</td>
+                                    <td class="vocab-def">Suffixe du nom de fichier indiquant le type</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Système d'exploitation</td>
+                                    <td class="vocab-ar">نظام التشغيل</td>
+                                    <td class="vocab-def">Logiciel principal gérant l'ordinateur</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Réseau LAN</td>
+                                    <td class="vocab-ar">شبكة محلية</td>
+                                    <td class="vocab-def">Réseau d'ordinateurs reliés entre eux</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `,
+
+            unite2: `
+                <div class="trace-content">
+                    <h2>🌐 Unité 2 : Échange d'Informations</h2>
+                    
+                    <h3>1️⃣ Partage de fichiers en réseau</h3>
+                    <div class="definition-box">
+                        <p><strong>Dossier partagé :</strong> Dossier accessible à d'autres ordinateurs du réseau</p>
+                    </div>
+
+                    <h3>2️⃣ Étapes pour partager un dossier</h3>
+                    <ol>
+                        <li>🖱️ Clic droit sur le dossier</li>
+                        <li>⚙️ Propriétés → Onglet "Partage"</li>
+                        <li>✅ Activer le partage</li>
+                        <li>🔐 Définir les autorisations</li>
+                    </ol>
+
+                    <h3>3️⃣ Accéder aux fichiers partagés</h3>
+                    <ul>
+                        <li>📂 <strong>Explorateur :</strong> Accès direct</li>
+                        <li>🌐 <strong>Adresse réseau :</strong> \\\\ordinateur\\dossier</li>
+                        <li>💾 <strong>Lecteur mappé :</strong> Accès permanent</li>
+                    </ul>
+
+                    <h3>4️⃣ Messagerie instantanée en LAN</h3>
+                    <p><strong>Permet d'envoyer et recevoir des messages instantanément</strong></p>
+
+                    <h4>Logiciels de messagerie</h4>
+                    <ul>
+                        <li>💬 LAN Messenger</li>
+                        <li>💬 Softros LAN Messenger</li>
+                        <li>💬 BeeBEEP</li>
+                    </ul>
+
+                    <div class="key-points">
+                        <h4>✏️ À retenir</h4>
+                        <ul>
+                            <li>Partage de fichiers via dossiers partagés</li>
+                            <li>Messagerie LAN pour communication instantanée</li>
+                            <li>Améliore la collaboration en équipe</li>
+                        </ul>
+                    </div>
+
+                    <div class="vocabulary-section">
+                        <h3>📖 Vocabulaire - Échange d'Informations</h3>
+                        <table class="vocab-table">
+                            <thead>
+                                <tr>
+                                    <th>Français</th>
+                                    <th>العربية (Arabe)</th>
+                                    <th>Explication</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="vocab-fr">Partage</td>
+                                    <td class="vocab-ar">المشاركة</td>
+                                    <td class="vocab-def">Action de rendre accessible à d'autres</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Dossier partagé</td>
+                                    <td class="vocab-ar">مجلد مشترك</td>
+                                    <td class="vocab-def">Répertoire accessible en réseau</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Autorisation</td>
+                                    <td class="vocab-ar">ترخيص</td>
+                                    <td class="vocab-def">Permission d'accéder ou modifier</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Messagerie</td>
+                                    <td class="vocab-ar">البريد الإلكتروني / الرسائل</td>
+                                    <td class="vocab-def">Système d'envoi de messages</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Instantané</td>
+                                    <td class="vocab-ar">فوري</td>
+                                    <td class="vocab-def">En temps réel, immédiat</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Explorateur</td>
+                                    <td class="vocab-ar">مستعرض الملفات </td>
+                                    <td class="vocab-def">Outil de navigation des fichiers</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Lecteur mappé</td>
+                                    <td class="vocab-ar">محرك أقراص مرتبط عبر الشبكة</td>
+                                    <td class="vocab-def">Raccourci pour accéder au dossier partagé</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `,
+
+            unite3: `
+                <div class="trace-content">
+                    <h2>📊 Unité 3 : Tableurs</h2>
+                    
+                    <h3>1️⃣ Définition</h3>
+                    <div class="definition-box">
+                        <p><strong>Un tableur</strong> = Logiciel pour calculs et traitement de données en tableau</p>
+                    </div>
+
+                    <h3>2️⃣ Exemples de tableurs</h3>
+                    <ul>
+                        <li>📊 Microsoft Excel</li>
+                        <li>📊 Google Sheets</li>
+                        <li>📊 LibreOffice Calc</li>
+                    </ul>
+
+                    <h3>3️⃣ Structure d'une feuille</h3>
+                    <ul>
+                        <li>📊 <strong>Lignes :</strong> Numérotées (1, 2, 3...)</li>
+                        <li>📈 <strong>Colonnes :</strong> Nommées (A, B, C... XFD)</li>
+                        <li>📋 <strong>Cellule :</strong> Intersection ligne/colonne (Ex: A1, B5)</li>
+                    </ul>
+
+                    <h3>4️⃣ Formules de base</h3>
+                    <ul>
+                        <li>=A1+B1 → Addition</li>
+                        <li>=A1-B1 → Soustraction</li>
+                        <li>=A1*B1 → Multiplication</li>
+                        <li>=A1/B1 → Division</li>
+                    </ul>
+
+                    <h3>5️⃣ Fonctions principales</h3>
+                    <ul>
+                        <li>=SOMME(A1:A10) → Additionner une plage</li>
+                        <li>=MOYENNE(A1:A10) → Calculer la moyenne</li>
+                        <li>=MIN(A1:A10) → Valeur minimale</li>
+                        <li>=MAX(A1:A10) → Valeur maximale</li>
+                    </ul>
+
+                    <h3>6️⃣ Types de graphiques</h3>
+                    <ul>
+                        <li>📊 Histogramme - Comparer des valeurs</li>
+                        <li>📈 Courbe - Évolution dans le temps</li>
+                        <li>🥧 Secteur (Camembert) - Répartition %</li>
+                    </ul>
+
+                    <div class="key-points">
+                        <h4>✏️ À retenir</h4>
+                        <ul>
+                            <li>Cellule = Intersection ligne/colonne</li>
+                            <li>Formule = Commande de calcul (commence par =)</li>
+                            <li>Fonction = Calcul prédéfini</li>
+                            <li>Graphique = Visualisation des données</li>
+                        </ul>
+                    </div>
+
+                    <div class="vocabulary-section">
+                        <h3>📖 Vocabulaire - Tableurs</h3>
+                        <table class="vocab-table">
+                            <thead>
+                                <tr>
+                                    <th>Français</th>
+                                    <th>العربية (Arabe)</th>
+                                    <th>Explication</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="vocab-fr">Tableur</td>
+                                    <td class="vocab-ar">جدول البيانات</td>
+                                    <td class="vocab-def">Logiciel de gestion de tableaux et calculs</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Cellule</td>
+                                    <td class="vocab-ar">خانة</td>
+                                    <td class="vocab-def">Case d'intersection ligne-colonne</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Formule</td>
+                                    <td class="vocab-ar">صيغة</td>
+                                    <td class="vocab-def">Expression de calcul commençant par =</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Fonction</td>
+                                    <td class="vocab-ar">دالة</td>
+                                    <td class="vocab-def">Calcul prédéfini (SOMME, MOYENNE, etc.)</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Plage</td>
+                                    <td class="vocab-ar">نطاق</td>
+                                    <td class="vocab-def">Ensemble de cellules (A1:A10)</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Graphique</td>
+                                    <td class="vocab-ar">الرسم البياني</td>
+                                    <td class="vocab-def">Représentation visuelle des données</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Histogramme</td>
+                                    <td class="vocab-ar">رسم بياني عمودي</td>
+                                    <td class="vocab-def">Graphique en barres pour comparer</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Secteur (Camembert)</td>
+                                    <td class="vocab-ar">رسم بياني دائري</td>
+                                    <td class="vocab-def">Graphique montrant les pourcentages</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `,
+
+            unite4: `
+                <div class="trace-content">
+                    <h2>🢀 Unité 4 : Programmation Logo</h2>
+                    
+                    <h3>1️⃣ Définitions</h3>
+                    <div class="definition-box">
+                        <p><strong>Programme :</strong> Suite d'instructions ordonnées</p>
+                        <p><strong>LOGO :</strong> Langage utilisant une tortue graphique</p>
+                    </div>
+
+                    <h3>2️⃣ Commandes de déplacement</h3>
+                    <ul>
+                        <li>AV n → Avancer de n pas</li>
+                        <li>RE n → Reculer de n pas</li>
+                        <li>TD x → Tourner à droite de x°</li>
+                        <li>TG x → Tourner à gauche de x°</li>
+                    </ul>
+
+                    <h3>3️⃣ Commandes du stylo</h3>
+                    <ul>
+                        <li>LC → Lever le crayon (ne dessine pas)</li>
+                        <li>BC → Baisser le crayon (dessine)</li>
+                        <li>FCC n → Changer la couleur (n = 0 à 31)</li>
+                        <li>FEPAIS n → Épaisseur du trait</li>
+                    </ul>
+
+                    <h3>4️⃣ Commandes d'affichage</h3>
+                    <ul>
+                        <li>VE → Vider l'écran</li>
+                        <li>CT → Cacher la tortue</li>
+                        <li>MT → Montrer la tortue</li>
+                    </ul>
+
+                    <h3>5️⃣ Boucles - REPETE</h3>
+                    <pre>REPETE n [
+    instructions
+]</pre>
+                    <p><strong>Exemple - Carré :</strong></p>
+                    <pre>REPETE 4 [
+    AV 100
+    TD 90
+]</pre>
+
+                    <h3>6️⃣ Procédures</h3>
+                    <pre>POUR CARRE
+    REPETE 4 [
+        AV 100
+        TD 90
+    ]
+FIN</pre>
+
+                    <h3>7️⃣ Procédures avec paramètres</h3>
+                    <pre>POUR CARRE :cote
+    REPETE 4 [
+        AV :cote
+        TD 90
+    ]
+FIN</pre>
+                    <p><strong>Utilisation :</strong> CARRE 50 ou CARRE 150</p>
+
+                    <div class="key-points">
+                        <h4>✏️ À retenir</h4>
+                        <ul>
+                            <li>AV/RE pour déplacer, TD/TG pour tourner</li>
+                            <li>LC/BC pour lever/baisser le crayon</li>
+                            <li>REPETE pour répéter des instructions</li>
+                            <li>POUR/FIN pour créer des procédures</li>
+                            <li>Paramètres avec : (ex: :taille)</li>
+                        </ul>
+                    </div>
+
+                    <div class="vocabulary-section">
+                        <h3>📖 Vocabulaire - Programmation Logo</h3>
+                        <table class="vocab-table">
+                            <thead>
+                                <tr>
+                                    <th>Français</th>
+                                    <th>العربية (Arabe)</th>
+                                    <th>Explication</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="vocab-fr">Programme</td>
+                                    <td class="vocab-ar">برنامج</td>
+                                    <td class="vocab-def">Suite d'instructions pour l'ordinateur</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Langage</td>
+                                    <td class="vocab-ar">لغة البرمجة</td>
+                                    <td class="vocab-def">Système de communication avec l'ordinateur</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Instruction</td>
+                                    <td class="vocab-ar">أمر</td>
+                                    <td class="vocab-def">Commande donnée à la tortue</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Tortue graphique</td>
+                                    <td class="vocab-ar">سلحفاة الرسم</td>
+                                    <td class="vocab-def">Objet qui se déplace et dessine</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Boucle (REPETE)</td>
+                                    <td class="vocab-ar">حلقة التكرار</td>
+                                    <td class="vocab-def">Répétition d'instructions</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Procédure</td>
+                                    <td class="vocab-ar">إجراء</td>
+                                    <td class="vocab-def">Ensemble d'instructions regroupées</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Paramètre</td>
+                                    <td class="vocab-ar">معامل</td>
+                                    <td class="vocab-def">Variable modifiable dans une procédure</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Variable</td>
+                                    <td class="vocab-ar">متغير</td>
+                                    <td class="vocab-def">Élément qui peut changer de valeur</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Crayon</td>
+                                    <td class="vocab-ar">القلم</td>
+                                    <td class="vocab-def">Outil de dessinage de la tortue</td>
+                                </tr>
+                                <tr>
+                                    <td class="vocab-fr">Rotation</td>
+                                    <td class="vocab-ar">دوران</td>
+                                    <td class="vocab-def">Changement de direction</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `
+        };
+
+        function getUnit() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('unit') || 'rappel';
+        }
+
+        function displayTrace() {
+            const unit = getUnit();
+            const traceContent = document.getElementById('traceContent');
+            
+            if (traces[unit]) {
+                traceContent.innerHTML = traces[unit];
+            } else {
+                traceContent.innerHTML = '<p style="color: red;">Trace écrit non trouvée.</p>';
+            }
+        }
+
+        function closeTraceEcrit() {
+            // Redirection vers votre site
+            window.location.href = 'https://ELRHAOUAT.github.io/cours/';
+        }
+
+        // Afficher le contenu au chargement
+        document.addEventListener('DOMContentLoaded', displayTrace);
+    </script>
+</body>
+</html>
