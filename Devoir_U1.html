@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercice - Composants Informatiques</title>
+    <title>Devoir n°2 – Informatique </title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -634,9 +634,8 @@
             document.getElementById('results').classList.remove('show');
             document.getElementById('printBtn').style.display = 'none';
         }
-              // === ENVOI DES RESULTATS VERS GOOGLE SHEETS PAR URL (GET) ===
-        function envoyerResultatGoogle(nom, classe, groupe, note) {
-            const baseUrl = 'https://script.google.com/macros/s/AKfycbwWMo0y1naKklc6KGuumL8ooJMUKXmzPwIfwe5fFeReyr4lNwqcURzkpZvPngTDmvyDfQ/exec';
+              function envoyerResultatGoogle(nom, classe, groupe, note) {
+            const baseUrl = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec"; // <-- mettre ton vrai lien ici
         
             const params = new URLSearchParams({
                 nom: nom,
@@ -645,14 +644,14 @@
                 note: String(note)
             });
         
-            // On envoie une requête GET simple
-            fetch(baseUrl + '?' + params.toString(), {
-                method: 'GET',
-                mode: 'no-cors'
+            fetch(baseUrl + "?" + params.toString(), {
+                method: "GET",
+                mode: "no-cors"
             }).catch(err => {
-                console.error('Erreur lors de l’envoi vers Google Sheets', err);
+                console.error("Erreur lors de l’envoi vers Google Sheets :", err);
             });
         }
+
 
 
         createQuestions();
