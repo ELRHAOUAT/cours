@@ -634,28 +634,28 @@
             document.getElementById('results').classList.remove('show');
             document.getElementById('printBtn').style.display = 'none';
         }
-                // === ENVOI DES RESULTATS VERS GOOGLE SHEETS ===
-        function envoyerResultatGoogle(nom, classe, groupe, note) {
-            const url = 'https://script.google.com/macros/s/AKfycbxNzMd1QX9D4BepA9-mOHq9OOXOVi9ReHg2_qwLxuOq0Si-TupA7SI9o1LA9U6jYecq_Q/exec';
-        
-            const payload = {
-                nom: nom,
-                classe: classe,
-                groupe: groupe,
-                note: note
-            };
-        
-            fetch(url, {
-                method: 'POST',
-                mode: 'no-cors', // pour éviter les problèmes CORS
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            }).catch(err => {
-                console.error('Erreur lors de l’envoi vers Google Sheets', err);
-            });
-        }
+               // === ENVOI DES RESULTATS VERS GOOGLE SHEETS ===
+            function envoyerResultatGoogle(nom, classe, groupe, note) {
+                const url = 'https://script.google.com/macros/s/AKfycbwWMo0y1naKklc6KGuumL8ooJMUKXmzPwIfwe5fFeReyr4lNwqcURzkpZvPngTDmvyDfQ/exec';
+            
+                const payload = {
+                    nom: nom,
+                    classe: classe,
+                    groupe: groupe,
+                    note: note
+                };
+            
+                fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors', // pour éviter les problèmes CORS
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                }).catch(err => {
+                    console.error('Erreur lors de l’envoi vers Google Sheets', err);
+                });
+            }
 
         createQuestions();
     </script>
