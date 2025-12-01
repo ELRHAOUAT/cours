@@ -12,6 +12,44 @@
             min-height: 100vh;
             padding: 40px 20px;
         }
+                .devoir-header {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        }
+
+        .devoir-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .devoir-header h2 {
+            font-size: 20px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .devoir-badge {
+            font-size: 15px;
+            font-weight: 600;
+            background: #667eea;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 12px;
+            box-shadow: 0 3px 8px rgba(102,126,234,0.4);
+        }
+
+
+        
         .container {
             background: white;
             border-radius: 15px;
@@ -303,6 +341,12 @@
     </style>
 </head>
 <body>
+    <div class="devoir-header">
+        <div class="devoir-badge">Devoir n°2 – Informatique (30 min)</div>
+        <h1>Exercice Interactif : Composants Informatiques</h1>
+        <h2>Collège Al-Wahda – 2ᵉ Année</h2>
+    </div>
+
     <div class="container">
         <h1>📋 Exercice Interactif - Composants Informatiques</h1>
         
@@ -586,6 +630,7 @@
             document.getElementById('results').classList.remove('show');
             document.getElementById('printBtn').style.display = 'none';
         }
+        
 
         createQuestions();
     </script>
