@@ -620,10 +620,13 @@
                 <span class="percentage" id="percentageText">${pct}%</span>
                 <div class="score-note">Note: <span id="noteScore">${note}</span>/20</div>
                 <div style="background: ${note >= 18 ? '#d4edda' : note >= 15 ? '#d1ecf1' : note >= 12 ? '#fff3cd' : note >= 10 ? '#ffe5cc' : '#f8d7da'}; border-left: 4px solid ${note >= 18 ? '#28a745' : note >= 15 ? '#17a2b8' : note >= 12 ? '#ffc107' : note >= 10 ? '#fd7e14' : '#dc3545'}; padding: 15px; border-radius: 8px; margin-top: 15px; color: ${note >= 18 ? '#155724' : note >= 15 ? '#0c5460' : note >= 12 ? '#856404' : note >= 10 ? '#721c24' : '#721c24'}; font-weight: 600;">${appreciation}</div>`;
+            // Envoi des infos vers Google Sheets
+            envoyerResultatGoogle(nom, classe, groupe, note);
 
             document.getElementById('results').classList.add('show');
             document.getElementById('printBtn').style.display = 'inline-block';
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+            
         }
 
         function reinitialiser() {
@@ -631,7 +634,28 @@
             document.getElementById('results').classList.remove('show');
             document.getElementById('printBtn').style.display = 'none';
         }
+                // === ENVOI DES RESULTATS VERS GOOGLE SHEETS ===
+        function envoyerResultatGoogle(nom, classe, groupe, note) {
+            const url = 'https://script.google.com/macros/s/1eU5ckP5P2cHzfbqJr_Q_ISATqymP1sd704sof6aT7ZA/exec';
         
+            const payload = {
+                nom: nom,
+                classe: classe,
+                groupe: groupe,
+                note: note
+            };
+        
+            fetch(url, {
+                method: 'POST',
+                mode: 'no-cors', // pour éviter les problèmes CORS
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).catch(err => {
+                console.error('Erreur lors de l’envoi vers Google Sheets', err);
+            });
+        }
 
         createQuestions();
     </script>
