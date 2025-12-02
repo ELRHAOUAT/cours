@@ -23,7 +23,8 @@
       const nom = document.getElementById('nom').value;
       const classe = document.getElementById('classe').value;
 
-      const url = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec"; // ton URL /exec
+      // 👉 URL /exec de TA web app Apps Script
+      const url = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec";
 
       const htmlContent = document.documentElement.outerHTML;
 
@@ -35,17 +36,16 @@
 
       fetch(url, {
         method: "POST",
-        // 👇 PAS de headers → requête simple, pas de preflight CORS
+        mode: "no-cors",          // 👈 IMPORTANT : évite le blocage CORS
         body: JSON.stringify(payload)
       })
-      .then(r => r.text())
-      .then(t => {
-        console.log("Réponse Apps Script :", t);
+      .then(() => {
+        console.log("Requête envoyée (mode no-cors).");
         alert("Requête envoyée. Vérifie le dossier sur Drive.");
       })
       .catch(err => {
         console.error("Erreur fetch :", err);
-        alert("Erreur côté navigateur. Voir console (F12 → Console).");
+        alert("Erreur côté navigateur (voir console).");
       });
     }
   </script>
