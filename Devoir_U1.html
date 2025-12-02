@@ -435,7 +435,7 @@
         <div class="button-group">
             <button class="btn-primary" onclick="verifierReponses()">✓ Vérifier mes réponses</button>
             <button class="btn-secondary" onclick="reinitialiser()">↻ Réinitialiser</button>
-            <button class="btn-print" id="printBtn" style="display:none;" onclick="window.print()">🖨️ Imprimer</button>
+            <button class="btn-print" id="printBtn" style="display:none;" onclick="imprimerDevoir()">🖨️ Imprimer</button>
         </div>
 
         <div class="results" id="results">
@@ -476,6 +476,8 @@
         let data = [];
         let userAnswers = {};
         let resultatEnvoye = false; // empêche plusieurs vérifications
+        let impressionFaite = false; // l’élève a-t-il cliqué sur Imprimer ?
+
 
         function shuffleArray(array) {
             const shuffled = [...array];
@@ -484,6 +486,13 @@
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
             return shuffled;
+        }
+
+
+        function imprimerDevoir() {
+            // on marque que l'élève a cliqué sur Imprimer
+            impressionFaite = true;
+            window.print();
         }
 
         function createQuestions() {
@@ -635,9 +644,10 @@
                 envoyerResultatGoogle(nom, classe, groupe, note);
             }
     
-            resultatEnvoye = true;
+            resultatEnvoye = true; // Désactiver le bouton "Vérifier mes réponses"
+            impressionFaite = false; // il faudra imprimer avant de réinitialiser
     
-            // Désactiver le bouton "Vérifier mes réponses"
+           
             const btnVerif = document.querySelector('.btn-primary');
             if (btnVerif) {
                 btnVerif.disabled = true;
@@ -654,13 +664,21 @@
 
 
         function reinitialiser() {
+
+        // ⛔ bloquer si les réponses ont été vérifiées mais pas imprimées
+            if (resultatEnvoye && !impressionFaite) {
+                alert("Vous devez d'abord cliquer sur le bouton « Imprimer » avant de réinitialiser le devoir.");
+                return;
+            }
+        
+            // si on arrive ici, on a le droit de réinitialiser
             createQuestions();
             document.getElementById('results').classList.remove('show');
             document.getElementById('printBtn').style.display = 'none';
             document.getElementById('warningAlert').classList.remove('show');
         
-            // ✅ Autoriser une nouvelle vérification
             resultatEnvoye = false;
+            impressionFaite = false;
         
             const btnVerif = document.querySelector('.btn-primary');
             if (btnVerif) {
@@ -670,6 +688,7 @@
                 btnVerif.style.cursor = "pointer";
             }
         }
+
 
               function envoyerResultatGoogle(nom, classe, groupe, note) {
             const baseUrl = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec"; // <-- mettre ton vrai lien ici
