@@ -950,30 +950,36 @@
             });
         }
 
+        // Sauvegarde la page complète du devoir dans Google Drive (HTML)
         function sauvegarderDevoirHTML(nom, classe) {
-            const url = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec";  // ton URL /exec
+            // 👉 URL /exec de TA Web App Apps Script (celle avec le doPost)
+            const url = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec";
         
+            // HTML complet de la page au moment où l'élève clique sur "Vérifier"
             const htmlContent = document.documentElement.outerHTML;
         
+            // Données envoyées à Apps Script
             const payload = {
                 nom: nom,
                 classe: classe,
                 html: htmlContent
             };
         
+            // Envoi vers Apps Script (mode no-cors pour éviter les blocages CORS)
             fetch(url, {
                 method: "POST",
-                // ⚠️ PAS DE headers → pas de preflight CORS
+                mode: "no-cors",            // très important
                 body: JSON.stringify(payload)
             })
-            .then(r => r.text())
-            .then(t => {
-                console.log("Réponse Apps Script :", t);
+            .then(() => {
+                console.log("✅ Devoir HTML envoyé à Apps Script (mode no-cors).");
+                // pas besoin d'alert ici, on laisse la page tranquille
             })
             .catch(err => {
-                console.error("Erreur fetch (navigateur) :", err);
+                console.error("❌ Erreur lors de l'envoi du devoir HTML :", err);
             });
         }
+
 
 
 
