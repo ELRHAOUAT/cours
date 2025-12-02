@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Enregistrement HTML</title>
+</head>
+<body>
+  <h1>Page de test</h1>
+
+  <label>Nom : <input id="nom" value="Élève test"></label><br>
+  <label>Classe :
+    <select id="classe">
+      <option value="2APIC-1">2APIC-1</option>
+      <option value="2APIC-2">2APIC-2</option>
+      <option value="2APIC-3">2APIC-3</option>
+    </select>
+  </label><br><br>
+
+  <button onclick="envoyer()">Envoyer vers Drive</button>
+
+  <script>
+    function envoyer() {
+      const nom = document.getElementById('nom').value;
+      const classe = document.getElementById('classe').value;
+
+      const url = "https://script.google.com/macros/s/TON_ID/exec"; // 👉 remplace par TON URL /exec
+
+      const htmlContent = document.documentElement.outerHTML;
+
+      const payload = {
+        nom: nom,
+        classe: classe,
+        html: htmlContent
+      };
+
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.text())
+      .then(t => {
+        console.log("Réponse Apps Script :", t);
+        alert("Requête envoyée. Vérifie le dossier sur Drive.");
+      })
+      .catch(err => {
+        console.error("Erreur fetch :", err);
+        alert("Erreur côté navigateur. Voir console.");
+      });
+    }
+  </script>
+</body>
+</html>
