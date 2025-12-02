@@ -691,16 +691,19 @@
             alert('⚠️ Remplissez vos informations!');
             return;
         }
-        // Chercher la liste correspondant à la classe choisie
+         // Récupérer la liste des élèves pour la classe choisie
         const listeEleves = LISTES_2APIC[classe];
-        // Si c'est une de tes 3 classes 2APIC-1/2/3, on vérifie le nom
-        if (listeEleves) {
-        const existe = listeEleves.some(n => n.trim() === nom);
-
-        if (!existe) {
-            alert("⚠️ الاسم الذي أدخلته لا ينتمي إلى هذا القسم.\n\nالمرجو التأكد من كتابة الاسم بالعربية تمامًا كما هو في اللائحة الرسمية.");
-            return; // on arrête ici : pas de correction, pas d'enregistrement
+    
+        // Vérification : est-ce que le nom appartient à la classe choisie ?
+        const appartient = listeEleves.some(eleve => eleve.trim() === nom);
+    
+        if (!appartient) {
+            alert("⚠️ Le nom entré n'appartient pas à cette classe.\n\nالمرجو التأكد من كتابة الاسم بالعربية كما هو في اللائحة.");
+            return; // ❌ ON BLOQUE TOUT
         }
+    
+        // ✅ SI ON ARRIVE ICI : le nom appartient bien à la classe
+        // ... puis ton code normal continue (correction, note, envoi Google Sheets)
         let ok = true;
         for (let i = 0; i < data.length; i++) {
             if (!userAnswers[i].type || (userAnswers[i].type === 'Externe' && !userAnswers[i].categorie)) {
