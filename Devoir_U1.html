@@ -882,12 +882,13 @@
             if (typeof envoyerResultatGoogle === 'function') {
                 envoyerResultatGoogle(nom, classe, groupe, note);
             }
-    
-            resultatEnvoye = true; // Désactiver le bouton "Vérifier mes réponses"
-            impressionFaite = false; // il faudra imprimer avant de réinitialiser
+
             // Enregistrer aussi la page HTML complète dans Google Drive
             sauvegarderDevoirHTML(nom, classe);
 
+            resultatEnvoye = true; // Désactiver le bouton "Vérifier mes réponses"
+            impressionFaite = false; // il faudra imprimer avant de réinitialiser
+            
            
             const btnVerif = document.querySelector('.btn-primary');
             if (btnVerif) {
