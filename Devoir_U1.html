@@ -558,6 +558,20 @@
           "عسو زكية",
           "الوكيلي عبد المجيد"
         ];
+        // 🔗 Mapping entre la valeur du champ "classe" et la liste d'élèves
+        const LISTES_2APIC = {
+          "2APIC-1": ELEVES_2APIC_1,
+          "2APIC-2": ELEVES_2APIC_2,
+          "2APIC-3": ELEVES_2APIC_3
+        };
+        
+        // (optionnel) nombres d'élèves pour toi, développeur
+        const NB_ELEVES_2APIC_1 = ELEVES_2APIC_1.length;
+        const NB_ELEVES_2APIC_2 = ELEVES_2APIC_2.length;
+        const NB_ELEVES_2APIC_3 = ELEVES_2APIC_3.length;
+        console.log("2APIC-1 :", NB_ELEVES_2APIC_1, "élèves");
+        console.log("2APIC-2 :", NB_ELEVES_2APIC_2, "élèves");
+        console.log("2APIC-3 :", NB_ELEVES_2APIC_3, "élèves");
 
         const allData = [
             { composant: "Processeur (CPU)", fonction: "Traite les données et exécute les instructions", type: "Interne", categorie: "Traitement" },
@@ -677,7 +691,16 @@
             alert('⚠️ Remplissez vos informations!');
             return;
         }
-    
+        // Chercher la liste correspondant à la classe choisie
+        const listeEleves = LISTES_2APIC[classe];
+        // Si c'est une de tes 3 classes 2APIC-1/2/3, on vérifie le nom
+        if (listeEleves) {
+        const existe = listeEleves.some(n => n.trim() === nom);
+
+        if (!existe) {
+            alert("⚠️ الاسم الذي أدخلته لا ينتمي إلى هذا القسم.\n\nالمرجو التأكد من كتابة الاسم بالعربية تمامًا كما هو في اللائحة الرسمية.");
+            return; // on arrête ici : pas de correction, pas d'enregistrement
+        }
         let ok = true;
         for (let i = 0; i < data.length; i++) {
             if (!userAnswers[i].type || (userAnswers[i].type === 'Externe' && !userAnswers[i].categorie)) {
