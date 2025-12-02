@@ -373,6 +373,15 @@
                         <option value="2/9">2/9</option>
                     </select>
                 </div>
+                </div>
+                <div class="info-field">
+                    <label for="groupe">Groupe</label>
+                    <select id="groupe">
+                        <option value="">-- Sélectionner un groupe --</option>
+                        <option value="G1">G1</option>
+                        <option value="G2">G2</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -539,7 +548,7 @@
         function verifierReponses() {
         const nom = document.getElementById('nomComplet').value;
         const classe = document.getElementById('classe').value;
-        const groupe = const groupe = ""; // supprimé;
+        const groupe = document.getElementById('groupe').value;
     
         // ✅ Empêcher une deuxième vérification
         if (resultatEnvoye) {
@@ -547,7 +556,7 @@
             return;
         }
     
-        if (!nom || !classe ) {
+        if (!nom || !classe || !groupe) {
             alert('⚠️ Remplissez vos informations!');
             return;
         }
@@ -669,6 +678,7 @@
             const params = new URLSearchParams({
                 nom: nom,
                 classe: classe,
+                 groupe: groupe,
                 note: String(note)
             });
         
