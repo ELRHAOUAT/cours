@@ -475,6 +475,7 @@
 
         let data = [];
         let userAnswers = {};
+        let resultatEnvoye = false; // empêche plusieurs vérifications
 
         function shuffleArray(array) {
             const shuffled = [...array];
@@ -544,96 +545,132 @@
         }
 
         function verifierReponses() {
-            const nom = document.getElementById('nomComplet').value;
-            const classe = document.getElementById('classe').value;
-            const groupe = document.getElementById('groupe').value;
-
-            if (!nom || !classe || !groupe) {
-                alert('⚠️ Remplissez vos informations!');
-                return;
-            }
-
-            let ok = true;
-            for (let i = 0; i < data.length; i++) {
-                if (!userAnswers[i].type || (userAnswers[i].type === 'Externe' && !userAnswers[i].categorie)) {
-                    ok = false;
-                    break;
-                }
-            }
-
-            if (!ok) {
-                document.getElementById('warningAlert').classList.add('show');
-                setTimeout(() => document.getElementById('warningAlert').classList.remove('show'), 4000);
-                return;
-            }
-
-            const resultsList = document.getElementById('resultsList');
-            resultsList.innerHTML = '';
-            let score = 0;
-
-            data.forEach((item, index) => {
-                const typeOk = userAnswers[index].type === item.type;
-                let catOk = item.type === 'Interne' ? true : userAnswers[index].categorie === item.categorie;
-
-                const typeEl = document.querySelector(`.type-select[data-index="${index}"]`);
-                const catEl = document.querySelector(`.cat-select[data-index="${index}"]`);
-
-                typeEl.classList.toggle('correct', typeOk);
-                typeEl.classList.toggle('incorrect', !typeOk);
-                if (catEl && item.type === 'Externe') {
-                    catEl.classList.toggle('correct', catOk);
-                    catEl.classList.toggle('incorrect', !catOk);
-                }
-
-                if (typeOk) score++;
-                if (catOk && item.type === 'Externe') score++;
-
-                const res = document.createElement('div');
-                res.className = `result-item ${typeOk && catOk ? 'correct' : 'incorrect'}`;
-                let html = `<strong>${index + 1}. ${item.composant}</strong><br>Type: <span class="${typeOk ? 'correct-answer' : 'incorrect-answer'}">${userAnswers[index].type || '?'} ${typeOk ? '✓' : '✗'}</span><br>`;
-                if (item.type === 'Externe') {
-                    html += `Catégorie: <span class="${catOk ? 'correct-answer' : 'incorrect-answer'}">${userAnswers[index].categorie || '?'} ${catOk ? '✓' : '✗'}</span>`;
-                } else {
-                    html += `Catégorie: <span style="color:#999">N/A</span>`;
-                }
-                res.innerHTML = html;
-                resultsList.appendChild(res);
-            });
-
-            const total = data.length + data.filter(d => d.type === 'Externe').length;
-            const pct = Math.round((score / total) * 100);
-            const note = Math.round((score / total) * 20);
-
-            let appreciation = '';
-            if (note >= 18) appreciation = 'Excellent (A) 🏆';
-            else if (note >= 15) appreciation = 'Très Bien (B) ⭐';
-            else if (note >= 12) appreciation = 'Bien (C) 👍';
-            else if (note >= 10) appreciation = 'Passable (D) 📚';
-            else appreciation = 'Insuffisant (F) ❌';
-
-            document.getElementById('scoreText').textContent = `${score}/${total}`;
-            document.getElementById('percentageText').textContent = `${pct}%`;
-            document.getElementById('noteScore').textContent = note;
-            
-            const summ = document.querySelector('.score-summary');
-            summ.innerHTML = `Score : <span id="scoreText">${score}/${total}</span><br>
-                <span class="percentage" id="percentageText">${pct}%</span>
-                <div class="score-note">Note: <span id="noteScore">${note}</span>/20</div>
-                <div style="background: ${note >= 18 ? '#d4edda' : note >= 15 ? '#d1ecf1' : note >= 12 ? '#fff3cd' : note >= 10 ? '#ffe5cc' : '#f8d7da'}; border-left: 4px solid ${note >= 18 ? '#28a745' : note >= 15 ? '#17a2b8' : note >= 12 ? '#ffc107' : note >= 10 ? '#fd7e14' : '#dc3545'}; padding: 15px; border-radius: 8px; margin-top: 15px; color: ${note >= 18 ? '#155724' : note >= 15 ? '#0c5460' : note >= 12 ? '#856404' : note >= 10 ? '#721c24' : '#721c24'}; font-weight: 600;">${appreciation}</div>`;
-            // Envoi des infos vers Google Sheets
-            envoyerResultatGoogle(nom, classe, groupe, note);
-
-            document.getElementById('results').classList.add('show');
-            document.getElementById('printBtn').style.display = 'inline-block';
-            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-            
+        const nom = document.getElementById('nomComplet').value;
+        const classe = document.getElementById('classe').value;
+        const groupe = document.getElementById('groupe').value;
+    
+        // ✅ Empêcher une deuxième vérification
+        if (resultatEnvoye) {
+            alert("Vous avez déjà vérifié vos réponses. Le devoir ne peut être soumis qu'une seule fois.");
+            return;
         }
+    
+        if (!nom || !classe || !groupe) {
+            alert('⚠️ Remplissez vos informations!');
+            return;
+        }
+    
+        let ok = true;
+        for (let i = 0; i < data.length; i++) {
+            if (!userAnswers[i].type || (userAnswers[i].type === 'Externe' && !userAnswers[i].categorie)) {
+                ok = false;
+                break;
+            }
+        }
+    
+        if (!ok) {
+            document.getElementById('warningAlert').classList.add('show');
+            setTimeout(() => document.getElementById('warningAlert').classList.remove('show'), 4000);
+            return;
+        }
+    
+        const resultsList = document.getElementById('resultsList');
+        resultsList.innerHTML = '';
+        let score = 0;
+    
+        data.forEach((item, index) => {
+            const typeOk = userAnswers[index].type === item.type;
+            let catOk = item.type === 'Interne' ? true : userAnswers[index].categorie === item.categorie;
+    
+            const typeEl = document.querySelector(`.type-select[data-index="${index}"]`);
+            const catEl = document.querySelector(`.cat-select[data-index="${index}"]`);
+    
+            typeEl.classList.toggle('correct', typeOk);
+            typeEl.classList.toggle('incorrect', !typeOk);
+            if (catEl && item.type === 'Externe') {
+                catEl.classList.toggle('correct', catOk);
+                catEl.classList.toggle('incorrect', !catOk);
+            }
+    
+            if (typeOk) score++;
+            if (catOk && item.type === 'Externe') score++;
+    
+            const res = document.createElement('div');
+            res.className = `result-item ${typeOk && catOk ? 'correct' : 'incorrect'}`;
+            let html = `<strong>${index + 1}. ${item.composant}</strong><br>Type: <span class="${typeOk ? 'correct-answer' : 'incorrect-answer'}">${userAnswers[index].type || '?'} ${typeOk ? '✓' : '✗'}</span><br>`;
+            if (item.type === 'Externe') {
+                html += `Catégorie: <span class="${catOk ? 'correct-answer' : 'incorrect-answer'}">${userAnswers[index].categorie || '?'} ${catOk ? '✓' : '✗'}</span>`;
+            } else {
+                html += `Catégorie: <span style="color:#999">N/A</span>`;
+            }
+            res.innerHTML = html;
+            resultsList.appendChild(res);
+        });
+    
+        const total = data.length + data.filter(d => d.type === 'Externe').length;
+        const pct = Math.round((score / total) * 100);
+        const note = Math.round((score / total) * 20);
+    
+        let appreciation = '';
+        if (note >= 18) appreciation = 'Excellent (A) 🏆';
+        else if (note >= 15) appreciation = 'Très Bien (B) ⭐';
+        else if (note >= 12) appreciation = 'Bien (C) 👍';
+        else if (note >= 10) appreciation = 'Passable (D) 📚';
+        else appreciation = 'Insuffisant (F) ❌';
+    
+        document.getElementById('scoreText').textContent = `${score}/${total}`;
+        document.getElementById('percentageText').textContent = `${pct}%`;
+        document.getElementById('noteScore').textContent = note;
+                
+        const summ = document.querySelector('.score-summary');
+        summ.innerHTML = `Score : <span id="scoreText">${score}/${total}</span><br>
+            <span class="percentage" id="percentageText">${pct}%</span>
+            <div class="score-note">Note: <span id="noteScore">${note}</span>/20</div>
+            <div style="background: ${note >= 18 ? '#d4edda' : note >= 15 ? '#d1ecf1' : note >= 12 ? '#fff3cd' : note >= 10 ? '#ffe5cc' : '#f8d7da'}; border-left: 4px solid ${note >= 18 ? '#28a745' : note >= 15 ? '#17a2b8' : note >= 12 ? '#ffc107' : note >= 10 ? '#fd7e14' : '#dc3545'}; padding: 15px; border-radius: 8px; margin-top: 15px; color: ${note >= 18 ? '#155724' : note >= 15 ? '#0c5460' : note >= 12 ? '#856404' : note >= 10 ? '#721c24' : '#721c24'}; font-weight: 600;">${appreciation}</div>`;
+    
+        // ✅ Envoi vers Google Sheets UNE SEULE FOIS
+        if (!resultatEnvoye) {
+            // Si tu as la fonction envoyerResultatGoogle, elle est appelée ici :
+            if (typeof envoyerResultatGoogle === 'function') {
+                envoyerResultatGoogle(nom, classe, groupe, note);
+            }
+    
+            resultatEnvoye = true;
+    
+            // Désactiver le bouton "Vérifier mes réponses"
+            const btnVerif = document.querySelector('.btn-primary');
+            if (btnVerif) {
+                btnVerif.disabled = true;
+                btnVerif.textContent = "Réponses vérifiées";
+                btnVerif.style.opacity = "0.6";
+                btnVerif.style.cursor = "not-allowed";
+            }
+        }
+    
+        document.getElementById('results').classList.add('show');
+        document.getElementById('printBtn').style.display = 'inline-block';
+        document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+    }
+
 
         function reinitialiser() {
             createQuestions();
             document.getElementById('results').classList.remove('show');
             document.getElementById('printBtn').style.display = 'none';
+            document.getElementById('warningAlert').classList.remove('show');
+        
+            // ✅ Autoriser une nouvelle vérification
+            resultatEnvoye = false;
+        
+            const btnVerif = document.querySelector('.btn-primary');
+            if (btnVerif) {
+                btnVerif.disabled = false;
+                btnVerif.textContent = "✓ Vérifier mes réponses";
+                btnVerif.style.opacity = "1";
+                btnVerif.style.cursor = "pointer";
+            }
         }
+
               function envoyerResultatGoogle(nom, classe, groupe, note) {
             const baseUrl = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec"; // <-- mettre ton vrai lien ici
         
