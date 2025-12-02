@@ -698,7 +698,7 @@
         const appartient = listeEleves.some(eleve => eleve.trim() === nom);
     
         if (!appartient) {
-            alert("⚠️ Le nom entré n'appartient pas à cette classe.\n\nالمرجو التأكد من كتابة الاسم بالعربية كما هو في اللائحة.");
+            alert("⚠️ Erreur : le nom ne correspond pas à la classe choisie.\n\n📝 Vérifiez que :\n• Le nom est bien écrit en arabe, exactement comme dans la liste officielle.\n• Vous avez choisi la bonne classe.\n\n⚠️ خطأ: الاسم لا يطابق القسم المختار.\n\n📝 الرجاء التأكد مما يلي:\n• كتابة الاسم بالعربية بشكل صحيح كما هو في اللائحة الرسمية.\n•اختيار القسم الصحيحة.");
             return; // ❌ ON BLOQUE TOUT
         }
     
