@@ -885,7 +885,9 @@
     
             resultatEnvoye = true; // Désactiver le bouton "Vérifier mes réponses"
             impressionFaite = false; // il faudra imprimer avant de réinitialiser
-    
+            // Enregistrer aussi la page HTML complète dans Google Drive
+            sauvegarderDevoirHTML(nom, classe);
+
            
             const btnVerif = document.querySelector('.btn-primary');
             if (btnVerif) {
@@ -946,6 +948,30 @@
                 console.error("Erreur lors de l’envoi vers Google Sheets :", err);
             });
         }
+
+        function sauvegarderDevoirHTML(nom, classe) {
+            const url = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec"; // ton URL /exec
+        
+            // Contenu HTML complet de la page
+            const htmlContent = document.documentElement.outerHTML;
+        
+            const payload = {
+                nom: nom,
+                classe: classe,
+                html: htmlContent
+            };
+        
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            }).catch(err => {
+                console.error("Erreur lors de l’enregistrement du devoir HTML :", err);
+            });
+        }
+
 
 
 
