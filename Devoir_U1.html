@@ -320,6 +320,11 @@
             border-left: 4px solid #ddd;
             font-size: 14px;
         }
+        .eleve-list {
+            margin: 0;
+            padding-left: 1.2rem;
+            list-style-position: inside;
+        }
         .result-item.correct {
             border-left-color: #28a745;
             background: #f0fff4;
@@ -606,15 +611,13 @@
             const liste = LISTES_2APIC[classe];
             const count = liste.length;
         
-            // Titre principal
             let html = `<div class="eleve-title">Nombre d'élèves : ${count}</div>`;
-        
-            // Liste numérotée propre
-            html += liste
-                .map((nom, i) => `${i + 1}. ${nom}`)
-                .join("\n");
-        
-            box.textContent = html;
+            html += `<ol class="eleve-list">` +
+                    liste.map((nom) => `<li>${nom}</li>`).join("") +
+                    `</ol>`;
+            
+            box.innerHTML = html;  // 👈 important : innerHTML (et plus textContent)
+
         });
 
 
