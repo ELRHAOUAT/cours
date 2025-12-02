@@ -21,6 +21,21 @@
             border-left: 5px solid #667eea;
             box-shadow: 0 6px 25px rgba(0,0,0,0.15);
         }
+#
+                .eleve-box {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 17px;
+            line-height: 1.7;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-line;
+        }
+        .eleve-box strong {
+            color: #007bff;
+        }
 
         .devoir-header h1 {
             font-size: 28px;
@@ -381,6 +396,12 @@
                         <option value="G2">G2</option>
                     </select>
                 </div>
+                <div class="info-field">
+                    <label>Liste des élèves</label>
+                    <div id="listeElevesBox" class="eleve-box">
+                        <em>Veuillez choisir une classe pour afficher les élèves...</em>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -564,7 +585,26 @@
           "2APIC-2": ELEVES_2APIC_2,
           "2APIC-3": ELEVES_2APIC_3
         };
+        // Mettre à jour l'affichage de la liste selon la classe choisie
+        document.getElementById('classe').addEventListener('change', function () {
+            const classe = this.value;
+            const box = document.getElementById('listeElevesBox');
         
+            if (!classe || !LISTES_2APIC[classe]) {
+                box.innerHTML = "<em>Veuillez choisir une classe pour afficher les élèves...</em>";
+                return;
+            }
+        
+            const liste = LISTES_2APIC[classe];
+            const count = liste.length;
+        
+            // Construire l'affichage
+            let html = `<strong>Nombre d'élèves : ${count}</strong>\n\n`;
+            html += liste.map((nom, i) => `${i + 1}. ${nom}`).join("\n");
+        
+            box.textContent = html; // textContent = garde la mise en forme (pre-line)
+        });
+
         // (optionnel) nombres d'élèves pour toi, développeur
         const NB_ELEVES_2APIC_1 = ELEVES_2APIC_1.length;
         const NB_ELEVES_2APIC_2 = ELEVES_2APIC_2.length;
@@ -698,7 +738,7 @@
         const appartient = listeEleves.some(eleve => eleve.trim() === nom);
     
         if (!appartient) {
-            alert("⚠️ Erreur : le nom ne correspond pas à la classe choisie.\n\n📝 Vérifiez que :\n• Le nom est bien écrit en arabe, exactement comme dans la liste officielle.\n• Vous avez choisi la bonne classe.\n\n⚠️ خطأ: الاسم لا يطابق القسم المختار.\n\n📝 الرجاء التأكد مما يلي:\n• كتابة الاسم بالعربية بشكل صحيح كما هو في اللائحة الرسمية.\n•اختيار القسم الصحيحة.");
+            alert("⚠️ Erreur : le nom ne correspond pas à la classe sélectionnée.\n\n⚠️ خطأ: الاسم لا يطابق القسم المختار.");
             return; // ❌ ON BLOQUE TOUT
         }
     
