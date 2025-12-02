@@ -951,9 +951,8 @@
         }
 
         function sauvegarderDevoirHTML(nom, classe) {
-            const url = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec"; // ton URL /exec
+            const url = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec";  // ton URL /exec
         
-            // Contenu HTML complet de la page
             const htmlContent = document.documentElement.outerHTML;
         
             const payload = {
@@ -964,12 +963,15 @@
         
             fetch(url, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                // ⚠️ PAS DE headers → pas de preflight CORS
                 body: JSON.stringify(payload)
-            }).catch(err => {
-                console.error("Erreur lors de l’enregistrement du devoir HTML :", err);
+            })
+            .then(r => r.text())
+            .then(t => {
+                console.log("Réponse Apps Script :", t);
+            })
+            .catch(err => {
+                console.error("Erreur fetch (navigateur) :", err);
             });
         }
 
