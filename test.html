@@ -23,7 +23,7 @@
       const nom = document.getElementById('nom').value;
       const classe = document.getElementById('classe').value;
 
-      const url = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec"; // 👉 remplace par TON URL /exec
+      const url = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec"; // ton URL /exec
 
       const htmlContent = document.documentElement.outerHTML;
 
@@ -35,7 +35,7 @@
 
       fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        // 👇 PAS de headers → requête simple, pas de preflight CORS
         body: JSON.stringify(payload)
       })
       .then(r => r.text())
@@ -45,7 +45,7 @@
       })
       .catch(err => {
         console.error("Erreur fetch :", err);
-        alert("Erreur côté navigateur. Voir console.");
+        alert("Erreur côté navigateur. Voir console (F12 → Console).");
       });
     }
   </script>
