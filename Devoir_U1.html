@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devoir n°2 – Informatique </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -715,12 +716,39 @@
             return shuffled;
         }
 
+        function genererPDFDevoir(nom, classe) {
+            // On prend uniquement le bloc du devoir, pas tout l'écran
+            const element = document.querySelector('.container');
+        
+            // Options html2pdf
+            const options = {
+                margin:       10,
+                filename:     `Devoir_2 - ${classe} - ${nom}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+        
+            // On marque que l'élève a bien "imprimé" (pour autoriser Réinitialiser)
+            impressionFaite = true;
+        
+            // Génération + téléchargement du PDF
+            html2pdf().from(element).set(options).save();
+        }
+
 
         function imprimerDevoir() {
-            // on marque que l'élève a cliqué sur Imprimer
-            impressionFaite = true;
-            window.print();
+            const nom    = document.getElementById('nomComplet').value.trim();
+            const classe = document.getElementById('classe').value.trim();
+        
+            if (!nom || !classe) {
+                alert("Veuillez d'abord remplir votre nom et choisir la classe.");
+                return;
+            }
+        
+            genererPDFDevoir(nom, classe);
         }
+
 
         function createQuestions() {
             data = shuffleArray(allData);
@@ -883,8 +911,9 @@
                 envoyerResultatGoogle(nom, classe, groupe, note);
             }
 
-            // 💾 Enregistrer aussi la page HTML du devoir dans Drive
-            sauvegarderDevoirHTML(nom, classe);
+            
+            // 📄 Générer automatiquement le PDF du devoir corrigé
+            genererPDFDevoir(nom, classe);
 
             resultatEnvoye = true; // Désactiver le bouton "Vérifier mes réponses"
             impressionFaite = false; // il faudra imprimer avant de réinitialiser
