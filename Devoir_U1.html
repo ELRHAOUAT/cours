@@ -883,7 +883,7 @@
                 envoyerResultatGoogle(nom, classe, groupe, note);
             }
 
-            // Enregistrer aussi la page HTML complète dans Google Drive
+            // 💾 Enregistrer aussi la page HTML du devoir dans Drive
             sauvegarderDevoirHTML(nom, classe);
 
             resultatEnvoye = true; // Désactiver le bouton "Vérifier mes réponses"
@@ -952,28 +952,19 @@
 
         // Sauvegarde la page complète du devoir dans Google Drive (HTML)
        function sauvegarderDevoirHTML(nom, classe) {
-    const url = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec";
+    // Remplir les champs cachés du formulaire
+    document.getElementById('save_nom').value    = nom;
+    document.getElementById('save_classe').value = classe;
 
-    const htmlContent = document.documentElement.outerHTML;
+    // HTML complet de la page (devoir corrigé + note)
+    document.getElementById('save_html').value = document.documentElement.outerHTML;
 
-    const payload = {
-        nom: nom,
-        classe: classe,
-        html: htmlContent
-    };
+    // Soumettre le formulaire (POST vers Apps Script)
+    document.getElementById('saveFormDevoir').submit();
 
-    fetch(url, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify(payload)
-    })
-    .then(() => {
-        console.log("✅ Devoir HTML envoyé à Apps Script (mode no-cors).");
-    })
-    .catch(err => {
-        console.error("❌ Erreur lors de l'envoi du devoir HTML :", err);
-    });
+    console.log("✅ Devoir HTML envoyé vers Apps Script via formulaire.");
 }
+
 
 
 
@@ -982,5 +973,14 @@
 
         createQuestions();
     </script>
+    <!-- Formulaire caché pour envoyer le devoir vers Apps Script -->
+        <form id="saveFormDevoir" action="https://script.google.com/macros/s/AKfycbz5Jvn-ou2LYBudCOegyMI_r70ElCNGyXvhqNYy2G5mOBUBsEw7m_57SCwT7XG0jBle/exec" method="post" target="hidden_iframe_devoir">
+        <input type="hidden" name="nom"    id="save_nom">
+        <input type="hidden" name="classe" id="save_classe">
+        <input type="hidden" name="html"   id="save_html">
+    </form>
+    
+    <iframe name="hidden_iframe_devoir" style="display:none;"></iframe>
+
 </body>
 </html>
