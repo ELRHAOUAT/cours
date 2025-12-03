@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test doPost simple</title>
+</head>
+<body>
+  <h1>Test envoi POST</h1>
+
+  <label>Nom : <input id="nom" value="Test Nom"></label><br>
+  <label>Classe :
+    <select id="classe">
+      <option value="2APIC-1">2APIC-1</option>
+      <option value="2APIC-2">2APIC-2</option>
+      <option value="2APIC-3">2APIC-3</option>
+    </select>
+  </label><br><br>
+
+  <!-- Formulaire caché -->
+  <form id="saveFormDevoir" action="https://script.google.com/macros/s/AKfycbz5Jvn-ou2LYBudCOegyMI_r70ElCNGyXvhqNYy2G5mOBUBsEw7m_57SCwT7XG0jBle/exec" method="post" target="hidden_iframe_devoir">
+    <input type="hidden" name="nom"    id="save_nom">
+    <input type="hidden" name="classe" id="save_classe">
+    <input type="hidden" name="html"   id="save_html">
+  </form>
+
+  <iframe name="hidden_iframe_devoir" style="display:none;"></iframe>
+
+  <button onclick="envoyer()">Envoyer vers doPost</button>
+
+  <script>
+    function envoyer() {
+      const nom    = document.getElementById('nom').value;
+      const classe = document.getElementById('classe').value;
+
+      document.getElementById('save_nom').value    = nom;
+      document.getElementById('save_classe').value = classe;
+      document.getElementById('save_html').value   = "<html><body>Test simple</body></html>";
+
+      document.getElementById('saveFormDevoir').submit();
+
+      console.log("✅ POST envoyé via formulaire.");
+      alert("Requête envoyée. Vérifie Apps Script → Exécutions.");
+    }
+  </script>
+</body>
+</html>
