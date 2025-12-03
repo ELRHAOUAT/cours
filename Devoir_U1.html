@@ -55,7 +55,19 @@
             max-height: 260px;
             overflow-y: auto;
         }
-        
+        /* Couleur des options dans la liste déroulante */
+            .type-select option[value="Interne"] {
+                color: #0c5460;          /* bleu-vert foncé */
+                background-color: #e2f3ff;
+                font-weight: 600;
+            }
+            
+            .type-select option[value="Externe"] {
+                color: #721c24;          /* rouge foncé */
+                background-color: #f8d7da;
+                font-weight: 600;
+            }
+
         .eleve-title {
             font-weight: bold;
             font-size: 16px;
@@ -793,13 +805,32 @@
                     const idx = this.dataset.index;
                     userAnswers[idx].type = this.value;
                     const catSelect = document.querySelector(`.cat-select[data-index="${idx}"]`);
+            
+                    // Activer / désactiver la catégorie
                     catSelect.disabled = this.value !== 'Externe';
                     if (this.value !== 'Externe') {
                         catSelect.value = '';
                         userAnswers[idx].categorie = '';
                     }
+            
+                    // 🎨 Couleurs visuelles selon le choix
+                    if (this.value === "Interne") {
+                        this.style.backgroundColor = "#e2f3ff";
+                        this.style.color = "#0c5460";
+                        this.style.borderColor = "#0c5460";
+                    } else if (this.value === "Externe") {
+                        this.style.backgroundColor = "#f8d7da";
+                        this.style.color = "#721c24";
+                        this.style.borderColor = "#721c24";
+                    } else {
+                        // valeur vide / reset
+                        this.style.backgroundColor = "white";
+                        this.style.color = "#000";
+                        this.style.borderColor = "#ddd";
+                    }
                 });
             });
+
 
             document.querySelectorAll('.cat-select').forEach(select => {
                 select.addEventListener('change', function() {
