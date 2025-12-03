@@ -403,17 +403,6 @@
 </head>
 <body>
     
-<!-- Formulaire caché pour envoyer le devoir vers Apps Script -->
-<form id="saveFormDevoir"
-      action="https://script.google.com/macros/s/AKfycbz5Jvn-ou2LYBudCOegyMI_r70ElCNGyXvhqNYy2G5mOBUBsEw7m_57SCwT7XG0jBle/exec"
-      method="post"
-      target="hidden_iframe_devoir">
-  <input type="hidden" name="nom"    id="save_nom">
-  <input type="hidden" name="classe" id="save_classe">
-  <input type="hidden" name="html"   id="save_html">
-</form>
-
-<iframe name="hidden_iframe_devoir" style="display:none;"></iframe>
 
     <div class="container">
         <div class="devoir-header">
@@ -892,11 +881,10 @@
             // Si tu as la fonction envoyerResultatGoogle, elle est appelée ici :
             if (typeof envoyerResultatGoogle === 'function') {
                 envoyerResultatGoogle(nom, classe, groupe, note);
-                sauvegarderDevoirHTML(nom, classe);
             }
 
             // 💾 Enregistrer aussi la page HTML du devoir dans Drive
-            
+            sauvegarderDevoirHTML(nom, classe);
 
             resultatEnvoye = true; // Désactiver le bouton "Vérifier mes réponses"
             impressionFaite = false; // il faudra imprimer avant de réinitialiser
@@ -967,7 +955,9 @@
     // Remplir les champs cachés du formulaire
     document.getElementById('save_nom').value    = nom;
     document.getElementById('save_classe').value = classe;
-    document.getElementById('save_html').value   = document.documentElement.outerHTML;
+
+    // HTML complet de la page (devoir corrigé + note)
+    document.getElementById('save_html').value = document.documentElement.outerHTML;
 
     // Soumettre le formulaire (POST vers Apps Script)
     document.getElementById('saveFormDevoir').submit();
@@ -981,10 +971,16 @@
 
 
 
-
         createQuestions();
     </script>
+    <!-- Formulaire caché pour envoyer le devoir vers Apps Script -->
+        <form id="saveFormDevoir" action="https://script.google.com/macros/s/AKfycbz5Jvn-ou2LYBudCOegyMI_r70ElCNGyXvhqNYy2G5mOBUBsEw7m_57SCwT7XG0jBle/exec" method="post" target="hidden_iframe_devoir">
+        <input type="hidden" name="nom"    id="save_nom">
+        <input type="hidden" name="classe" id="save_classe">
+        <input type="hidden" name="html"   id="save_html">
+    </form>
     
+    <iframe name="hidden_iframe_devoir" style="display:none;"></iframe>
 
 </body>
 </html>
