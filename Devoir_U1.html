@@ -400,6 +400,7 @@
             .question-card { page-break-inside: avoid; margin-bottom: 15px; }
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     
@@ -896,8 +897,12 @@
             }
 
             // 💾 Enregistrer aussi la page HTML du devoir dans Drive
-            
 
+            // Générer automatiquement le PDF du devoir corrigé
+                genererPDFDevoir(nom, classe);
+            
+                // Optionnel : empêcher la double soumission
+                document.getElementById("btnVerifier").disabled = true;
             resultatEnvoye = true; // Désactiver le bouton "Vérifier mes réponses"
             impressionFaite = false; // il faudra imprimer avant de réinitialiser
             
@@ -975,6 +980,20 @@
     console.log("✅ Devoir HTML envoyé vers Apps Script via formulaire.");
 }
 
+        function genererPDFDevoir(nom, classe) {
+              // Élément à capturer (par ex. toute la page)
+              const element = document.body;
+            
+              const options = {
+                margin:       10,
+                filename:     `Devoir_2 - ${classe} - ${nom}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+              };
+            
+              html2pdf().from(element).set(options).save();
+            }
 
 
 
