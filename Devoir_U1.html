@@ -55,18 +55,19 @@
             max-height: 260px;
             overflow-y: auto;
         }
-        /* Couleur des options dans la liste déroulante */
-            .type-select option[value="Interne"] {
-                color: #0c5460;          /* bleu-vert foncé */
-                background-color: #e2f3ff;
-                font-weight: 600;
-            }
-            
-            .type-select option[value="Externe"] {
-                color: #721c24;          /* rouge foncé */
-                background-color: #f8d7da;
-                font-weight: 600;
-            }
+        /* Couleurs des options du menu déroulant */
+        .type-select option[value="Interne"] {
+            background-color: #e6f0ff; /* bleu clair */
+            color: #003e80;
+            font-weight: 600;
+        }
+        
+        .type-select option[value="Externe"] {
+            background-color: #fff7cc; /* jaune clair */
+            color: #8a6d00;
+            font-weight: 600;
+        }
+
 
         .eleve-title {
             font-weight: bold;
@@ -814,20 +815,25 @@
                     }
             
                     // 🎨 Couleurs visuelles selon le choix
+                    // 🎨 Couleurs visuelles neutres
                     if (this.value === "Interne") {
-                        this.style.backgroundColor = "#e2f3ff";
-                        this.style.color = "#0c5460";
-                        this.style.borderColor = "#0c5460";
-                    } else if (this.value === "Externe") {
-                        this.style.backgroundColor = "#f8d7da";
-                        this.style.color = "#721c24";
-                        this.style.borderColor = "#721c24";
-                    } else {
-                        // valeur vide / reset
+                        this.style.backgroundColor = "#e6f0ff";   // bleu clair
+                        this.style.color = "#003e80";
+                        this.style.borderColor = "#003e80";
+                    }
+                    
+                    else if (this.value === "Externe") {
+                        this.style.backgroundColor = "#fff7cc";   // jaune clair
+                        this.style.color = "#8a6d00";
+                        this.style.borderColor = "#8a6d00";
+                    }
+                    
+                    else {
                         this.style.backgroundColor = "white";
                         this.style.color = "#000";
                         this.style.borderColor = "#ddd";
                     }
+
                 });
             });
 
