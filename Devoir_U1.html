@@ -1066,12 +1066,6 @@
 
 
         function reinitialiser() {
-
-        // ⛔ bloquer si les réponses ont été vérifiées mais pas imprimées
-            if (resultatEnvoye) {
-                alert("Vous devez d'abord cliquer sur le bouton « Imprimer » avant de réinitialiser le devoir.");
-                return;
-            }
         
             // si on arrive ici, on a le droit de réinitialiser
             createQuestions();
