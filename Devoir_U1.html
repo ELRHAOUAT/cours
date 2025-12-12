@@ -86,36 +86,39 @@
         }
         
         /* --- AMÉLIORATION DU TABLEAU DES ÉLÈVES --- */
+        /* --- AMÉLIORATION DU TABLEAU --- */
         .eleve-table td {
             border: 1px solid #e3e3e3;
-            padding: 6px 8px;
+            padding: 8px 10px; /* Un peu plus d'espace pour le doigt */
             vertical-align: top;
-            font-size: 14px;
+            font-size: 15px;
             color: #333;
-            
-            /* NOUVEAU : Rendre la cellule interactive */
-            cursor: pointer; /* Affiche une main au survol */
-            transition: all 0.2s ease; /* Animation douce */
-            user-select: none; /* Empêche de sélectionner le texte (bleu) au double-clic */
+            cursor: pointer; /* Affiche la main */
+            transition: all 0.2s ease;
         }
         
         /* Effet au survol de la souris */
+        /* Effet au survol (quand on passe la souris) */
         .eleve-table td:hover {
-            background-color: #667eea; /* Fond violet/bleu */
-            color: white; /* Texte blanc */
-            font-weight: bold;
-            transform: scale(1.02); /* Léger grossissement */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: #667eea; /* Gris clair au survol */
         }
         
-        /* Effet quand la case est vide (pour ne pas cliquer dans le vide) */
-        .eleve-table td:empty {
-            cursor: default;
-            background-color: transparent !important;
-            transform: none !important;
-            box-shadow: none !important;
+        
+        /* Effet SÉLECTIONNÉ (C'est l'astuce que vous avez demandée) */
+        .eleve-table td.selected {
+            background-color: #28a745 !important; /* Vert validation */
+            color: white !important;
+            font-weight: bold;
+            border-color: #28a745;
+            transform: scale(1.03);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-
+        /* Empêcher de cliquer sur les cases vides */
+        .eleve-table td:empty {
+            pointer-events: none;
+            background: transparent;
+            border: none;
+        }
         .devoir-header h1 {
             font-size: 28px;
             font-weight: 700;
@@ -669,77 +672,86 @@
 
          // --- 🆕 NOUVELLE LOGIQUE : DÉTECTION AUTOMATIQUE DU NUMÉRO ---
         
-        // Fonction pour trouver et afficher le numéro
+        // --- FONCTION PRINCIPALE : GESTION DU CLIC ET DU NUMÉRO ---
+
+        // 1. Fonction qui met à jour le numéro ET le surlignage dans le tableau
         function majNumeroEleve() {
             const nomSaisi = document.getElementById('nomComplet').value.trim();
             const classeSelect = document.getElementById('classe').value;
             const champNumero = document.getElementById('numero');
-            // --- 🆕 NOUVELLE FONCTIONNALITÉ : SÉLECTION PAR DOUBLE-CLIC ---
-            
-            // On attache l'événement au conteneur principal de la liste
-            const boiteListe = document.getElementById('listeElevesBox');
-                    boiteListe.addEventListener('click', function(e) {
-            // Vérifier si l'élément cliqué est bien une cellule (TD)
-            if (e.target.tagName === 'TD') {
-                const texteCellule = e.target.innerText.trim();
-                
-                    // Vérifier que la cellule n'est pas vide
-                    if (texteCellule !== "") {
-                        
-                        // Le texte est sous la forme "1. Nom Prénom"
-                        // On doit enlever le numéro et le point au début
-                        // Explication Regex : ^[0-9]+ signifie "chiffres au début", \. signifie "point"
-                        const nomSeul = texteCellule.replace(/^[0-9]+\.\s*/, '');
-            
-                        // 1. Remplir le champ Nom
-                        const inputNom = document.getElementById('nomComplet');
-                        inputNom.value = nomSeul;
-            
-                        // 2. Déclencher manuellement la recherche du numéro
-                        // (Comme si l'élève avait tapé le nom lui-même)
-                        majNumeroEleve();
-            
-                        // 3. Petit effet visuel pour confirmer à l'élève que c'est validé
-                        inputNom.style.transition = "background-color 0.3s";
-                        inputNom.style.backgroundColor = "#d4edda"; // Flash vert
-                        setTimeout(() => {
-                            inputNom.style.backgroundColor = "#ffffff"; // Retour au blanc
-                        }, 500);
-                        
-                        // Scroll doux vers le haut pour montrer le champ rempli (optionnel)
-                        document.querySelector('.info-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                }
-            });
-            // Si la classe et le nom sont remplis
-            if (classeSelect && nomSaisi && LISTES_2APIC[classeSelect]) {
+        
+            // Réinitialiser tous les surlignages du tableau d'abord
+            document.querySelectorAll('.eleve-table td').forEach(td => td.classList.remove('selected'));
+        
+            if (classeSelect && LISTES_2APIC[classeSelect]) {
                 const liste = LISTES_2APIC[classeSelect];
-                
-                // On cherche l'index du nom dans la liste (on compare en enlevant les espaces inutiles)
-                // findIndex commence à 0, donc on ajoute +1 pour avoir le numéro de liste
+                // Recherche de l'index
                 const index = liste.findIndex(eleve => eleve.trim() === nomSaisi);
         
                 if (index !== -1) {
-                    // Trouvé ! On affiche index + 1
+                    // ✅ Trouvé !
+                    // 1. Mettre le numéro
                     champNumero.value = index + 1;
-                    champNumero.style.borderColor = "#28a745"; // Bordure verte pour dire "OK"
-                    champNumero.style.backgroundColor = "#d4edda";
+                    champNumero.style.backgroundColor = "#d4edda"; // Vert clair
+                    champNumero.style.borderColor = "#28a745";
+        
+                    // 2. L'ASTUCE : Retrouver la case dans le tableau et la colorier
+                    // On cherche toutes les cases non vides
+                    const cellules = document.querySelectorAll('.eleve-table td');
+                    cellules.forEach(td => {
+                        // On compare le texte de la cellule (sans le numéro "1. ") avec le nom saisi
+                        const texteCellule = td.innerText.replace(/^[0-9]+\.\s*/, '').trim();
+                        if (texteCellule === nomSaisi) {
+                            td.classList.add('selected'); // On ajoute la classe verte CSS
+                        }
+                    });
+        
                 } else {
-                    // Pas trouvé
+                    // ❌ Pas trouvé
                     champNumero.value = "";
-                    champNumero.style.borderColor = "#ddd";
                     champNumero.style.backgroundColor = "#e9ecef";
+                    champNumero.style.borderColor = "#ddd";
                 }
             } else {
-                // Si champs vides
                 champNumero.value = "";
             }
         }
         
-        // On écoute les changements sur le champ NOM et CLASSE
-        document.getElementById('nomComplet').addEventListener('input', majNumeroEleve); // À chaque lettre tapée
-        document.getElementById('classe').addEventListener('change', majNumeroEleve);    // Au changement de classe
+        // 2. Gestion du SIMPLE CLIC sur le tableau
+        const boiteListe = document.getElementById('listeElevesBox');
+        
+        boiteListe.addEventListener('click', function(e) {
+            // Vérifier qu'on clique bien sur une cellule (TD)
+            if (e.target.tagName === 'TD') {
+                const texteCellule = e.target.innerText.trim();
+                
+                if (texteCellule !== "") {
+                    // Nettoyer le nom (enlever "12. ")
+                    const nomSeul = texteCellule.replace(/^[0-9]+\.\s*/, '');
+        
+                    // Remplir le champ texte
+                    const inputNom = document.getElementById('nomComplet');
+                    inputNom.value = nomSeul;
+        
+                    // Lancer la mise à jour (qui va calculer le numéro ET colorier la case)
+                    majNumeroEleve();
+                    
+                    // Petit flash visuel sur le champ nom
+                    inputNom.style.backgroundColor = "#e8f0fe";
+                    setTimeout(() => { inputNom.style.backgroundColor = "#ffffff"; }, 300);
+                }
+            }
+        });
+        
+        // 3. Écouteurs d'événements (pour que ça marche aussi si on tape au clavier)
+        document.getElementById('nomComplet').addEventListener('input', majNumeroEleve);
+        document.getElementById('classe').addEventListener('change', function() {
+            // Quand on change de classe, on vide le numéro et le nom
+            document.getElementById('nomComplet').value = "";
+            document.getElementById('numero').value = "";
+        });  // Au changement de classe
         document.getElementById('classe').addEventListener('change', function () {
+            
             const classe = this.value;
             const box = document.getElementById('listeElevesBox');
         
