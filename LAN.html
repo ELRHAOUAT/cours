@@ -5,41 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devoir n°2 – Informatique: Situation problème - Réseau Local</title>
     <style>
+    /* =========================================
+       1. RESET ET BASE (GLOBAL)
+       ========================================= */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        /* IMPORTANT : Force la couleur de texte sombre par défaut */
+        color: #333; 
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            min-height: 100vh;
-        }
+    .container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px;
+        overflow: hidden;
+    }
 
-    /* Style du conteneur principal */
+    /* =========================================
+       2. EN-TÊTE DU DEVOIR (STYLE FORMEL)
+       ========================================= */
+    .devoir-header {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 25px 30px;
+        margin-bottom: 30px;
+        text-align: center;
+        border-left: 5px solid #667eea;
+        box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+        color: #333;
+    }
+
+    .devoir-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .devoir-header h2 {
+        font-size: 20px;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 10px;
+    }
+
+    .devoir-badge {
+        font-size: 20px;
+        font-weight: 600;
+        background: #667eea;
+        color: white;
+        padding: 6px 18px;
+        border-radius: 20px;
+        display: inline-block;
+        margin-bottom: 12px;
+        box-shadow: 0 3px 8px rgba(102,126,234,0.4);
+    }
+
+    /* =========================================
+       3. SECTION INFORMATIONS (HOMOGÈNE)
+       ========================================= */
     .info-section {
         background: #f0f4ff;
         padding: 20px;
         border-radius: 8px;
         margin-bottom: 30px;
         border-left: 4px solid #667eea;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333 !important; /* Force le texte noir */
     }
 
-    /* Grille pour aligner les champs */
+    .info-section h3 {
+        margin-bottom: 15px;
+        color: #333;
+        font-size: 1.2em;
+    }
+
     .info-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 15px;
     }
 
-    /* Style des labels et inputs */
     .info-field { display: flex; flex-direction: column; }
-    
+
     .info-field label {
         font-weight: 600;
         color: #333;
@@ -47,6 +106,7 @@
         font-size: 14px;
     }
 
+    /* Styles unifiés pour tous les inputs et selects */
     .info-field input,
     .info-field select {
         padding: 10px;
@@ -55,382 +115,214 @@
         font-size: 14px;
         font-family: inherit;
         width: 100%;
-        box-sizing: border-box; /* Important pour ne pas dépasser */
+        
+        /* CORRECTIF TEXTE BLANC : Force fond blanc et texte noir */
+        background-color: #ffffff !important; 
+        color: #333333 !important;
     }
 
-    /* Style spécifique pour la flèche du select */
     .info-field select {
-        background: white url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat;
-        background-position: right 5px center;
+        background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 10px center;
         background-size: 20px;
         appearance: none;
         padding-right: 30px;
         cursor: pointer;
     }
 
-    .info-field select:disabled {
-        background-color: #e9ecef;
-        color: #999;
-        cursor: not-allowed;
-        border-color: #ccc;
-    }
-
-    /* Style de la boîte contenant la liste des élèves */
+    /* Zone liste des élèves */
     .eleve-box {
-        background: #ffffff;
+        background: #ffffff !important;
         border: 2px solid #cfcfcf;
         border-radius: 10px;
         padding: 12px 16px;
         font-size: 15px;
-        max-height: 220px;
+        max-height: 200px;
         overflow-y: auto;
-        white-space: pre-wrap;
+        margin-top: 15px;
+        color: #333 !important;
     }
 
     .eleve-title {
         font-weight: bold;
-        font-size: 16px;
-        margin-bottom: 10px;
         color: #1a3e85;
+        margin-bottom: 10px;
         text-align: left;
-        direction: ltr;
     }
-
-    /* Tableau pour aligner les noms */
+    
     .eleve-table {
         width: 100%;
         border-collapse: collapse;
-        direction: rtl;      /* Indispensable pour l'arabe */
+        direction: rtl;
         text-align: right;
     }
-
+    
     .eleve-table td {
         border: 1px solid #e3e3e3;
         padding: 6px 8px;
         vertical-align: top;
         font-size: 14px;
+        color: #333;
+    }
+    
+    .eleve-table tr:nth-child(even) { background-color: #f9f9f9; }
+
+    /* =========================================
+       4. CONTENU & QUESTIONS (LAN STYLE)
+       ========================================= */
+    .section h2 {
+        color: #667eea;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        border-bottom: 3px solid #667eea;
+        padding-bottom: 8px;
     }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
+    .context-box {
+        background: #f0f4ff;
+        border-left: 5px solid #667eea;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        line-height: 1.6;
+        color: #333;
+    }
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-        }
+    .phase {
+        background: #f9f9f9;
+        border: 2px solid #e0e0e0;
+        padding: 18px;
+        border-radius: 8px;
+        margin-bottom: 18px;
+        transition: all 0.3s ease;
+    }
+    
+    .phase:hover { border-color: #667eea; }
 
-        .header h1 {
-            font-size: 1.8em;
-            margin-bottom: 8px;
-            text-align: center;
-        }
+    .phase h4 {
+        color: #667eea;
+        margin-bottom: 12px;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 6px;
+    }
 
-        .header p {
-            font-size: 0.9em;
-            opacity: 0.95;
-            text-align: center;
-            margin-bottom: 8px;
-        }
+    .question-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
 
-        .header-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 12px;
-            margin-top: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-        }
+    .question-fr, .question-ar {
+        background: white;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: 500;
+        font-size: 0.9em;
+        line-height: 1.4;
+        color: #2c3e50; /* Texte bleu foncé */
+    }
 
-        .info-group {
-            display: flex;
-            flex-direction: column;
-        }
+    .question-fr { border-left: 4px solid #667eea; }
+    .question-ar { border-right: 4px solid #764ba2; direction: rtl; text-align: right; }
 
-        .info-group label {
-            font-size: 0.8em;
-            margin-bottom: 4px;
-            opacity: 0.95;
-            font-weight: 600;
-        }
+    .options-group { display: flex; flex-direction: column; gap: 8px; }
 
-        .info-group input,
-        .info-group select {
-            padding: 8px;
-            border: none;
-            border-radius: 5px;
-            font-size: 0.85em;
-            background: white;
-            color: #333;
-        }
+    .option {
+        background: white;
+        border: 2px solid #ddd;
+        padding: 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #333; /* Texte sombre */
+        transition: all 0.2s ease;
+    }
 
-        .content {
-            padding: 25px;
-        }
+    .option:hover { background: #f0f4ff; border-color: #667eea; }
+    
+    .option.correct { border-color: #28a745; background: #d4edda; }
+    .option.incorrect { border-color: #dc3545; background: #f8d7da; }
 
-        .section {
-            margin-bottom: 30px;
-        }
+    .feedback { display: none; padding: 10px; border-radius: 5px; margin-top: 8px; font-weight: bold; }
+    .feedback.show { display: block; }
+    .feedback.correct { background: #d4edda; color: #155724; }
+    .feedback.incorrect { background: #f8d7da; color: #721c24; }
 
-        .section h2 {
-            color: #667eea;
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 8px;
-        }
+    /* =========================================
+       5. RÉSULTATS & BOUTONS
+       ========================================= */
+    .score-summary {
+        margin-top: 20px;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        text-align: center;
+        border: 2px solid #667eea;
+        display: none;
+        color: #333;
+    }
+    .score-summary.show { display: block; }
 
-        .context-box {
-            background: #f0f4ff;
-            border-left: 5px solid #667eea;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            line-height: 1.6;
-            font-size: 0.95em;
-        }
+    .score-note { font-size: 32px; color: #28a745; font-weight: bold; margin-top: 10px; }
+    
+    .buttons { 
+        margin-top: 30px; 
+        display: flex; 
+        justify-content: center; 
+        gap: 15px; 
+        flex-wrap: wrap; 
+    }
+    
+    .btn {
+        padding: 12px 30px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        color: white;
+        font-weight: 600;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .btn-secondary { background: #6c757d; }
+    .btn-print { background: #28a745; display: none; }
 
-        .phase {
-            background: #f9f9f9;
-            border: 2px solid #764ba2;
-            padding: 18px;
-            border-radius: 8px;
-            margin-bottom: 18px;
-        }
+    .warning-alert {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        color: #856404;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: 600;
+        display: none;
+    }
+    .warning-alert.show { display: block; }
 
-        .phase h4 {
-            color: #667eea;
-            margin-bottom: 12px;
-            font-size: 1em;
-            border-bottom: 2px solid #764ba2;
-            padding-bottom: 6px;
-        }
+    /* =========================================
+       6. MEDIA QUERIES & PRINT
+       ========================================= */
+    @media (max-width: 900px) {
+        .question-header { grid-template-columns: 1fr; }
+        .info-grid { grid-template-columns: 1fr; }
+    }
 
-        .question-header {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .question-fr, .question-ar {
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-weight: 500;
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-
-        .question-fr {
-            border-left: 4px solid #667eea;
-            color: #2c3e50;
-        }
-
-        .question-ar {
-            border-right: 4px solid #764ba2;
-            direction: rtl;
-            text-align: right;
-            color: #2c3e50;
-        }
-
-        .options-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .option {
-            background: white;
-            border: 2px solid #ddd;
-            padding: 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            font-size: 0.88em;
-        }
-
-        .option:hover {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-
-        .option input[type="radio"] {
-            cursor: pointer;
-            width: 16px;
-            height: 16px;
-            margin-top: 2px;
-            flex-shrink: 0;
-        }
-
-        .option-text {
-            display: block;
-            flex: 1;
-        }
-
-        .option-fr {
-            font-weight: 500;
-            color: #2c3e50;
-            display: block;
-        }
-
-        .option-ar {
-            font-size: 0.85em;
-            color: #555;
-            direction: rtl;
-            text-align: right;
-            margin-top: 2px;
-            display: block;
-        }
-
-        .option.correct {
-            border-color: #28a745;
-            background: #d4edda;
-        }
-
-        .option.incorrect {
-            border-color: #dc3545;
-            background: #f8d7da;
-        }
-
-        .feedback {
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 8px;
-            display: none;
-            font-weight: 500;
-            font-size: 0.85em;
-        }
-
-        .feedback.show {
-            display: block;
-        }
-
-        .feedback.correct {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #28a745;
-        }
-
-        .feedback.incorrect {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #dc3545;
-        }
-
-        .score-display {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 1.4em;
-            font-weight: bold;
-            margin: 20px 0;
-            display: none;
-        }
-
-        .score-display.show {
-            display: block;
-        }
-
-        .score-display.partial {
-            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
-        }
-
-        .score-display.fail {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-        }
-
-        .buttons {
-            text-align: center;
-            margin: 20px 0;
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .btn-check {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-        }
-
-        .btn-check:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
-        }
-
-        .btn-reset {
-            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
-            color: white;
-        }
-
-        .btn-reset:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
-        }
-
-        .btn-print {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-print:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        .footer {
-            background: #f0f4ff;
-            padding: 15px;
-            text-align: center;
-            color: #667eea;
-            border-top: 2px solid #667eea;
-            margin-top: 25px;
-            font-size: 0.85em;
-        }
-
-        @media (max-width: 900px) {
-            .question-header {
-                grid-template-columns: 1fr;
-            }
-            .header-info {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
-            .buttons {
-                display: none !important;
-            }
-        }
-    </style>
+    @media print {
+        body { background: white; padding: 0; -webkit-print-color-adjust: exact; }
+        .container { box-shadow: none; max-width: 100%; padding: 0; margin: 0; }
+        .buttons, .warning-alert { display: none !important; }
+        .eleve-box { display: none; } /* Cache la liste des élèves à l'impression */
+        .phase { page-break-inside: avoid; border: 1px solid #ccc; }
+        .devoir-header { border: none; border-bottom: 2px solid #667eea; }
+    }
+</style>
 </head>
 <body>
     <div class="container">
