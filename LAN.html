@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Situation problème - Réseau Local</title>
     <style>
+
+        
         * {
             margin: 0;
             padding: 0;
@@ -17,6 +19,97 @@
             padding: 20px;
             min-height: 100vh;
         }
+
+    /* Style du conteneur principal */
+    .info-section {
+        background: #f0f4ff;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        border-left: 4px solid #667eea;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Grille pour aligner les champs */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    /* Style des labels et inputs */
+    .info-field { display: flex; flex-direction: column; }
+    
+    .info-field label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    .info-field input,
+    .info-field select {
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: inherit;
+        width: 100%;
+        box-sizing: border-box; /* Important pour ne pas dépasser */
+    }
+
+    /* Style spécifique pour la flèche du select */
+    .info-field select {
+        background: white url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat;
+        background-position: right 5px center;
+        background-size: 20px;
+        appearance: none;
+        padding-right: 30px;
+        cursor: pointer;
+    }
+
+    .info-field select:disabled {
+        background-color: #e9ecef;
+        color: #999;
+        cursor: not-allowed;
+        border-color: #ccc;
+    }
+
+    /* Style de la boîte contenant la liste des élèves */
+    .eleve-box {
+        background: #ffffff;
+        border: 2px solid #cfcfcf;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 15px;
+        max-height: 220px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+    }
+
+    .eleve-title {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #1a3e85;
+        text-align: left;
+        direction: ltr;
+    }
+
+    /* Tableau pour aligner les noms */
+    .eleve-table {
+        width: 100%;
+        border-collapse: collapse;
+        direction: rtl;      /* Indispensable pour l'arabe */
+        text-align: right;
+    }
+
+    .eleve-table td {
+        border: 1px solid #e3e3e3;
+        padding: 6px 8px;
+        vertical-align: top;
+        font-size: 14px;
+    }
 
         .container {
             max-width: 1100px;
@@ -928,6 +1021,75 @@ L’enseignant confie alors la mission aux élèves du groupe de travail : <br>
     </div>
 
     <script>
+        
+        // 🧾 Liste officielle 2APIC-1
+    const ELEVES_2APIC_1 = [
+        "جريري الياس", "زكاغ حسنة", "صغيري أيمن", "بوصوفي زينب", "الراحل خديجة", "ازعيم وائل", "السقار شيماء", 
+        "الصبابة فاطمة", "لمو أيوب", "شنغاف سكينة", "امقران ياسين", "قليل آدم", "القايدي سليمان", "المعناوي فاطمة", 
+        "كيران سناء", "بودخانة عثمان", "أسوال فاطمة الزهراء", "زكاغ يمين", "بوحدايد أيوب", "اوبضيل زينب", "حقوني حنان", 
+        "اعراب فدوى", "صفياتي محمد أمين", "الزعيم كوثر", "الوردي آدم", "مطعيش اميمة", "بوعودة مريم", "شلحي عبد الواحد", 
+        "كراط عبد العظيم", "تكرومت سليمان", "الرمضاني صفاء", "مطعيش منعم", "العرياني كريمة"
+    ];
+
+    // 🧾 Liste officielle 2APIC-2
+    const ELEVES_2APIC_2 = [
+        "أفقير ياسمينة", "ختا محمد", "خنوفي محمد", "حربال أسامة", "اسقار سفيان", "مرزوق ابراهيم", "الكراري أسماء", 
+        "زكاغ اسماء", "اكرور ياسين", "العدوتي فهيمة", "اشضان هاجر", "بنعلي فاطمة", "العمراني أميمة", "بولعوالي أنس", 
+        "الزياني صفاء", "الحمداتي عثمان", "الداودي فاطمة", "بلوط اسماعيل", "زكاغ أمينة", "زكاغ محمد أمين", "زكاغ هاجر", 
+        "القايدي وليد", "الزروقي مروى", "بوحدايد حليمة", "الجغاوي محمد", "بورار الهام", "السعيدي سلمى", "بودوحي سماح", 
+        "ازعيم ايوب", "ايشو عدنان", "السقار جواد", "المسكين حمزة", "لكحل بلال"
+    ];
+
+    // 🧾 Liste officielle 2APIC-3
+    const ELEVES_2APIC_3 = [
+        "الغلماني زياد", "شكود وئام", "غلادة زكارياء", "اعراب اسامة", "السائح خديجة", "هناتي آدم", "اجضيض أسامة", 
+        "الجغاوي آدم", "الخضراوي هند", "العروسي محمد", "الرداد زكرياء", "اعراب محمد", "بولعوالي زكرياء", "بولعوالي اكرام", 
+        "الوكيلي زكية", "اليحياوي ملاك", "عبو أدم", "الداودي يمينة", "العيطا فردوس", "سالم سفيان", "ريباك مريم", 
+        "اعراب داود", "حمادتي عيسى", "بلوط شيماء", "اشظان فاطمة", "مقراني فاطمة", "حلحول وصال", "معزوزي هبة", 
+        "الدرقاوي اسماعيل", "عسو زكية", "الوكيلي عبد المجيد"
+    ];
+
+    // 🔗 Mapping entre la valeur du champ "classe" et la liste d'élèves
+    const LISTES_2APIC = {
+        "2APIC-1": ELEVES_2APIC_1,
+        "2APIC-2": ELEVES_2APIC_2,
+        "2APIC-3": ELEVES_2APIC_3
+    };
+
+    // Écouteur d'événement sur le changement de classe
+    document.getElementById('classe').addEventListener('change', function () {
+        const classe = this.value;
+        const box = document.getElementById('listeElevesBox');
+
+        if (!classe || !LISTES_2APIC[classe]) {
+            box.innerHTML = "<em>Veuillez choisir une classe pour afficher les élèves…</em>";
+            return;
+        }
+
+        const liste = LISTES_2APIC[classe];
+        const count = liste.length;
+        const COLS = 6; // Nombre de colonnes dans le tableau
+        const rows = Math.ceil(count / COLS);
+
+        let html = `<div class="eleve-title">Nombre d'élèves : ${count}</div>`;
+        html += `<table class="eleve-table"><tbody>`;
+
+        for (let r = 0; r < rows; r++) {
+            html += "<tr>";
+            for (let c = 0; c < COLS; c++) {
+                const index = r * COLS + c;
+                if (index < count) {
+                    html += `<td>${index + 1}. ${liste[index]}</td>`;
+                } else {
+                    html += "<td></td>"; // cellules vides pour compléter le design
+                }
+            }
+            html += "</tr>";
+        }
+
+        html += "</tbody></table>";
+        box.innerHTML = html;
+    });
         const correctAnswers = {
             q1: 'a',  // Un réseau local (LAN)
             q2: 'b',  // Topologie en étoile
