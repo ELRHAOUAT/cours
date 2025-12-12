@@ -346,35 +346,42 @@
             <p>Situation d'Apprentissage et d'Évaluation | وضعية التعلم والتقييم</p>
             <p style="font-size: 0.85em; opacity: 0.9;">Barème: 0-20 points | ⏱️ Durée / المدة : 30 min / دقيقة</p>
 
-            <div class="header-info">
-                <div class="info-group">
-                    <label>Nom / الاسم</label>
-                    <input type="text" id="fullName">
+            <div class="info-section">
+            <h3 style="margin-bottom: 15px; color: #333;">📝 Informations personnelles</h3>
+            <div class="info-grid">
+                <div class="info-field">
+                    <label for="nomComplet">Nom complet</label>
+                    <input type="text" id="nomComplet" placeholder="Aziz ben Aziz">
                 </div>
-                <div class="info-group">
-                    <label>Classe / الفصل</label>
+                <div class="info-field">
+                    <label for="classe">Classe</label>
                     <select id="classe">
-                        <option value="">Sélectionnez / اختر</option>
-                        <option value="2/1">2/1</option>
-                        <option value="2/2">2/2</option>
-                        <option value="2/3">2/3</option>
-                        <option value="2/4">2/4</option>
-                        <option value="2/5">2/5</option>
-                        <option value="2/6">2/6</option>
-                        <option value="2/7">2/7</option>
-                        <option value="2/8">2/8</option>
-                        <option value="2/9">2/9</option>
+                        <option value="">-- Sélectionner une classe --</option>
+                        <option value="2APIC-1">2APIC-1</option>
+                        <option value="2APIC-2">2APIC-2</option>
+                        <option value="2APIC-3">2APIC-3</option>
+                        <option value="2APIC-4">2APIC-4</option>
+                        <option value="2APIC-5">2APIC-5</option>
+                        <option value="2APIC-6">2APIC-6</option>
+                        <option value="2APIC-7">2APIC-7</option>
+                        <option value="2APIC-8">2APIC-8</option>
+                        <option value="2APIC-9">2APIC-9</option>
                     </select>
                 </div>
-                <div class="info-group">
-                    <label>Groupe / المجموعة</label>
-                    <select id="groupe">
-                        <option value="">Sélectionnez / اختر</option>
-                        <option value="G1">G1</option>
+                <div class="info-field">
+                    <label for="groupe">Groupe</label>
+                    <select id="groupe" disabled>
+                        <option value="">-- Sélectionner un groupe --</option>
+                        <option value="G1" selected>G1</option>
                         <option value="G2">G2</option>
                     </select>
                 </div>
-                
+            </div>
+            <div class="info-field" style="width:100%; margin-top:15px;">
+                <label>Liste des élèves</label>
+                <div id="listeElevesBox" class="eleve-box">
+                    <em>Veuillez choisir une classe pour afficher les élèves…</em>
+                </div>
             </div>
         </div>
 
