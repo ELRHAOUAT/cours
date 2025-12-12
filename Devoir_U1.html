@@ -13,7 +13,7 @@
             min-height: 100vh;
             padding: 40px 20px;
         }
-                .devoir-header {
+        .devoir-header {
             background: #ffffff;
             border-radius: 12px;
             padding: 25px 30px;
@@ -22,8 +22,61 @@
             border-left: 5px solid #667eea;
             box-shadow: 0 6px 25px rgba(0,0,0,0.15);
         }
-#
-         .eleve-box {
+        /* --- STYLE DU BOUTON START ET CHRONO --- */
+        .start-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eef;
+        }
+        
+        /* Le bouton START */
+        .btn-start {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%); /* Vert moderne */
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+            animation: pulse 2s infinite; /* Petite animation pour attirer l'attention */
+        }
+        
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+        }
+        
+        /* Le Chronomètre */
+        .timer-box {
+            font-size: 28px;
+            font-weight: 800;
+            color: #667eea; /* Couleur du thème */
+            background: #f0f4ff;
+            padding: 15px 30px;
+            border-radius: 10px;
+            display: inline-block;
+            border: 2px solid #667eea;
+        }
+        
+        /* Animation "Pulse" pour le bouton start */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Classe pour cacher les questions au début */
+        .hidden-content {
+            display: none !important;
+        }
+        .eleve-box {
             background: #ffffff;
             border: 2px solid #cfcfcf;
             border-radius: 10px;
@@ -488,7 +541,17 @@
                 </div>
             </div>
         </div>
-
+        <div class="start-section" id="startSection">
+    
+            <button class="btn-start" onclick="commencerDevoir()">
+                🚀 COMMENCER LE DEVOIR / ابدأ الفرض
+            </button>
+        
+            <div id="timerDisplay" class="timer-box" style="display: none;">
+                ⏳ Temps restant : <span id="timeValue">30:00</span>
+            </div>
+        
+        </div>
         <p class="instructions">Pour chaque composant, déterminez s'il est <strong>Interne ou Externe</strong> et indiquez sa <strong>Catégorie</strong>. Les composants sont randomisés à chaque ouverture!</p>
 
         <div class="bareme-section">
@@ -535,9 +598,9 @@
             ⚠️ Vous avez laissé des champs vides! Veuillez compléter correctement vos réponses avant de vérifier.
         </div>
 
-        <div class="questions-container" id="questionsContainer"></div>
+        <div class="questions-container hidden-content" id="questionsContainer"></div>
 
-        <div class="button-group">
+        <div class="button-group hidden-content" id="actionButtons">
             <button class="btn-primary" onclick="verifierReponses()">✓ Vérifier mes réponses</button>
             <button class="btn-secondary" onclick="reinitialiser()">↻ Réinitialiser</button>
             <button class="btn-print" id="printBtn" style="display:none;" onclick="imprimerDevoir()">🖨️ Imprimer</button>
@@ -868,7 +931,88 @@
             genererPDFDevoir(nom, classe);
         }
 
-
+                // --- GESTION DU TEMPS ET DÉMARRAGE ---
+        
+        let tempsRestant = 30 * 60; // 30 minutes en secondes
+        let timerInterval;
+        let examenDemarre = false;
+        
+        function commencerDevoir() {
+            // 1. Vérifier que l'élève s'est identifié AVANT de commencer
+            const nom = document.getElementById('nomComplet').value;
+            const numero = document.getElementById('numero').value;
+            
+            if (!nom || !numero) {
+                alert("⛔ Veuillez d'abord choisir votre classe et valider votre nom !");
+                // Scroll vers le haut pour montrer les champs manquants
+                document.querySelector('.info-section').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+        
+            // 2. Verrouiller les infos (pour qu'il ne change pas de nom pendant l'examen)
+            document.getElementById('classe').disabled = true;
+            document.getElementById('nomComplet').disabled = true;
+            document.getElementById('numero').disabled = true;
+        
+            // 3. Afficher les questions et le chrono, cacher le bouton Start
+            document.getElementById('questionsContainer').classList.remove('hidden-content');
+            
+            // Si vous avez mis un ID "actionButtons" autour des boutons du bas, on les affiche aussi
+            const btnGroup = document.querySelector('.button-group'); 
+            if(btnGroup) btnGroup.style.display = 'flex'; // On force l'affichage
+            
+            document.querySelector('.btn-start').style.display = 'none';
+            document.getElementById('timerDisplay').style.display = 'inline-block';
+        
+            // 4. Lancer le décompte
+            examenDemarre = true;
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+        
+        function updateTimer() {
+            let minutes = Math.floor(tempsRestant / 60);
+            let secondes = tempsRestant % 60;
+        
+            // Ajout du zéro devant (ex: 09:05)
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            secondes = secondes < 10 ? '0' + secondes : secondes;
+        
+            const timerSpan = document.getElementById('timeValue');
+            timerSpan.textContent = `${minutes}:${secondes}`;
+        
+            // Changement de couleur quand il reste moins de 5 minutes
+            if (tempsRestant < 300) { 
+                timerSpan.style.color = "#dc3545"; // Rouge
+                document.getElementById('timerDisplay').style.borderColor = "#dc3545";
+            }
+        
+            // FIN DU TEMPS
+            if (tempsRestant <= 0) {
+                clearInterval(timerInterval);
+                finDuTempsForcee();
+            }
+        
+            tempsRestant--;
+        }
+        
+        function finDuTempsForcee() {
+            alert("⌛ TEMPS ÉCOULÉ ! \nLa correction va être lancée automatiquement.");
+            
+            // On appelle votre fonction de correction existante
+            verifierReponses();
+            
+            // On désactive tout pour empêcher de changer les réponses après coup
+            const selects = document.querySelectorAll('select');
+            selects.forEach(s => s.disabled = true);
+        }
+        
+        // ⚠️ IMPORTANT : Modifiez votre CSS ou ajoutez ceci pour cacher les boutons au début
+        // Ajoutez ce petit bout de JS pour masquer les boutons d'action au chargement de la page
+        document.addEventListener("DOMContentLoaded", function() {
+            // On cache les boutons de validation au démarrage
+            const btnGroup = document.querySelector('.button-group');
+            if(btnGroup) btnGroup.style.display = 'none';
+        });
         function createQuestions() {
             data = shuffleArray(allData);
             const container = document.getElementById('questionsContainer');
