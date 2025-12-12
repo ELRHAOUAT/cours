@@ -85,11 +85,35 @@
             text-align: right;
         }
         
+        /* --- AMÉLIORATION DU TABLEAU DES ÉLÈVES --- */
         .eleve-table td {
             border: 1px solid #e3e3e3;
             padding: 6px 8px;
             vertical-align: top;
-            min-height: 32px;
+            font-size: 14px;
+            color: #333;
+            
+            /* NOUVEAU : Rendre la cellule interactive */
+            cursor: pointer; /* Affiche une main au survol */
+            transition: all 0.2s ease; /* Animation douce */
+            user-select: none; /* Empêche de sélectionner le texte (bleu) au double-clic */
+        }
+        
+        /* Effet au survol de la souris */
+        .eleve-table td:hover {
+            background-color: #667eea; /* Fond violet/bleu */
+            color: white; /* Texte blanc */
+            font-weight: bold;
+            transform: scale(1.02); /* Léger grossissement */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Effet quand la case est vide (pour ne pas cliquer dans le vide) */
+        .eleve-table td:empty {
+            cursor: default;
+            background-color: transparent !important;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
         .devoir-header h1 {
@@ -650,7 +674,43 @@
             const nomSaisi = document.getElementById('nomComplet').value.trim();
             const classeSelect = document.getElementById('classe').value;
             const champNumero = document.getElementById('numero');
-        
+            // --- 🆕 NOUVELLE FONCTIONNALITÉ : SÉLECTION PAR DOUBLE-CLIC ---
+            
+            // On attache l'événement au conteneur principal de la liste
+            const boiteListe = document.getElementById('listeElevesBox');
+                    boiteListe.addEventListener('dblclick', function(e) {
+            // Vérifier si l'élément cliqué est bien une cellule (TD)
+            if (e.target.tagName === 'TD') {
+                const texteCellule = e.target.innerText.trim();
+                
+                    // Vérifier que la cellule n'est pas vide
+                    if (texteCellule !== "") {
+                        
+                        // Le texte est sous la forme "1. Nom Prénom"
+                        // On doit enlever le numéro et le point au début
+                        // Explication Regex : ^[0-9]+ signifie "chiffres au début", \. signifie "point"
+                        const nomSeul = texteCellule.replace(/^[0-9]+\.\s*/, '');
+            
+                        // 1. Remplir le champ Nom
+                        const inputNom = document.getElementById('nomComplet');
+                        inputNom.value = nomSeul;
+            
+                        // 2. Déclencher manuellement la recherche du numéro
+                        // (Comme si l'élève avait tapé le nom lui-même)
+                        majNumeroEleve();
+            
+                        // 3. Petit effet visuel pour confirmer à l'élève que c'est validé
+                        inputNom.style.transition = "background-color 0.3s";
+                        inputNom.style.backgroundColor = "#d4edda"; // Flash vert
+                        setTimeout(() => {
+                            inputNom.style.backgroundColor = "#ffffff"; // Retour au blanc
+                        }, 500);
+                        
+                        // Scroll doux vers le haut pour montrer le champ rempli (optionnel)
+                        document.querySelector('.info-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
             // Si la classe et le nom sont remplis
             if (classeSelect && nomSaisi && LISTES_2APIC[classeSelect]) {
                 const liste = LISTES_2APIC[classeSelect];
