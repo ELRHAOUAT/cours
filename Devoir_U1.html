@@ -449,12 +449,9 @@
                     </select>
                 </div>
                 <div class="info-field">
-                    <label for="groupe">Groupe</label>
-                    <select id="groupe" disabled>
-                        <option value="">-- Sélectionner un groupe --</option>
-                        <option value="G1" selected>G1</option>
-                        <option value="G2">G2</option>
-                    </select>
+                    <label for="numero">Numéro d'élève </label>
+                    <input type="text" id="numero" placeholder="Automatique / تلقائي" readonly 
+                           style="background-color: #e9ecef; color: #495057; font-weight: bold; cursor: not-allowed;">
                 </div>
             </div>
             <div class="info-field" style="width:100%; margin-top:15px;">
@@ -645,6 +642,43 @@
           "2APIC-2": ELEVES_2APIC_2,
           "2APIC-3": ELEVES_2APIC_3
         };
+
+         // --- 🆕 NOUVELLE LOGIQUE : DÉTECTION AUTOMATIQUE DU NUMÉRO ---
+        
+        // Fonction pour trouver et afficher le numéro
+        function majNumeroEleve() {
+            const nomSaisi = document.getElementById('nomComplet').value.trim();
+            const classeSelect = document.getElementById('classe').value;
+            const champNumero = document.getElementById('numero');
+        
+            // Si la classe et le nom sont remplis
+            if (classeSelect && nomSaisi && LISTES_2APIC[classeSelect]) {
+                const liste = LISTES_2APIC[classeSelect];
+                
+                // On cherche l'index du nom dans la liste (on compare en enlevant les espaces inutiles)
+                // findIndex commence à 0, donc on ajoute +1 pour avoir le numéro de liste
+                const index = liste.findIndex(eleve => eleve.trim() === nomSaisi);
+        
+                if (index !== -1) {
+                    // Trouvé ! On affiche index + 1
+                    champNumero.value = index + 1;
+                    champNumero.style.borderColor = "#28a745"; // Bordure verte pour dire "OK"
+                    champNumero.style.backgroundColor = "#d4edda";
+                } else {
+                    // Pas trouvé
+                    champNumero.value = "";
+                    champNumero.style.borderColor = "#ddd";
+                    champNumero.style.backgroundColor = "#e9ecef";
+                }
+            } else {
+                // Si champs vides
+                champNumero.value = "";
+            }
+        }
+        
+        // On écoute les changements sur le champ NOM et CLASSE
+        document.getElementById('nomComplet').addEventListener('input', majNumeroEleve); // À chaque lettre tapée
+        document.getElementById('classe').addEventListener('change', majNumeroEleve);    // Au changement de classe
         document.getElementById('classe').addEventListener('change', function () {
             const classe = this.value;
             const box = document.getElementById('listeElevesBox');
@@ -848,7 +882,7 @@
         function verifierReponses() {
         const nom = document.getElementById('nomComplet').value;
         const classe = document.getElementById('classe').value;
-        const groupe = document.getElementById('groupe').value;
+        const numero = document.getElementById('numero').value;
     
         // ✅ Empêcher une deuxième vérification
         if (resultatEnvoye) {
@@ -856,7 +890,7 @@
             return;
         }
     
-        if (!nom || !classe || !groupe) {
+        if (!nom || !classe || !numero) {
             alert('⚠️ Remplissez vos informations!');
             return;
         }
@@ -945,7 +979,7 @@
         if (!resultatEnvoye) {
             // Si tu as la fonction envoyerResultatGoogle, elle est appelée ici :
             if (typeof envoyerResultatGoogle === 'function') {
-                envoyerResultatGoogle(nom, classe, groupe, note);
+                envoyerResultatGoogle(nom, classe, numero, note);
             }
 
             
@@ -998,13 +1032,13 @@
         }
 
 
-              function envoyerResultatGoogle(nom, classe, groupe, note) {
+              function envoyerResultatGoogle(nom, classe, numero, note) {
             const baseUrl = "https://script.google.com/macros/s/AKfycbx0OcYdDps_-tf4yYVhAcy611dQl0rAUYkeYt6UyWU4Q96sOQdlVk87aPB3K6txrRkPtA/exec"; // <-- mettre ton vrai lien ici
         
             const params = new URLSearchParams({
                 nom: nom,
                 classe: classe,
-                 groupe: groupe,
+                 groupe: numero,
                 note: String(note)
             });
         
