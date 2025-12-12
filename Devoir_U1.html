@@ -678,7 +678,7 @@
             
             // On attache l'événement au conteneur principal de la liste
             const boiteListe = document.getElementById('listeElevesBox');
-                    boiteListe.addEventListener('dblclick', function(e) {
+                    boiteListe.addEventListener('click', function(e) {
             // Vérifier si l'élément cliqué est bien une cellule (TD)
             if (e.target.tagName === 'TD') {
                 const texteCellule = e.target.innerText.trim();
@@ -1068,7 +1068,7 @@
         function reinitialiser() {
 
         // ⛔ bloquer si les réponses ont été vérifiées mais pas imprimées
-            if (resultatEnvoye && !impressionFaite) {
+            if (resultatEnvoye) {
                 alert("Vous devez d'abord cliquer sur le bouton « Imprimer » avant de réinitialiser le devoir.");
                 return;
             }
