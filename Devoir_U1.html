@@ -13,38 +13,7 @@
             min-height: 100vh;
             padding: 40px 20px;
         }
-        /* --- STYLE DE LA ZONE VERROUILLÉE --- */
-        .info-section {
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        
-        /* Quand la section est verrouillée */
-        .info-section.locked {
-            opacity: 0.7;
-            background-color: #e9ecef;
-            cursor: pointer; /* Affiche une main pour dire "clique-moi" */
-            border-color: #aaa;
-        }
-        
-        /* Petit cadenas qui apparaît quand c'est verrouillé */
-        .info-section.locked::after {
-            content: "🔒 Cliquer pour déverrouiller (Mot de passe requis) / انقر لفتح القفل";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: bold;
-            pointer-events: none; /* Permet de cliquer à travers */
-            font-size: 14px;
-            width: 80%;
-            text-align: center;
-        }
-        .devoir-header {
+                .devoir-header {
             background: #ffffff;
             border-radius: 12px;
             padding: 25px 30px;
@@ -53,61 +22,8 @@
             border-left: 5px solid #667eea;
             box-shadow: 0 6px 25px rgba(0,0,0,0.15);
         }
-        /* --- STYLE DU BOUTON START ET CHRONO --- */
-        .start-section {
-            text-align: center;
-            margin: 30px 0;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border: 1px solid #eef;
-        }
-        
-        /* Le bouton START */
-        .btn-start {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%); /* Vert moderne */
-            color: white;
-            font-size: 22px;
-            font-weight: bold;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-            animation: pulse 2s infinite; /* Petite animation pour attirer l'attention */
-        }
-        
-        .btn-start:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
-        }
-        
-        /* Le Chronomètre */
-        .timer-box {
-            font-size: 28px;
-            font-weight: 800;
-            color: #667eea; /* Couleur du thème */
-            background: #f0f4ff;
-            padding: 15px 30px;
-            border-radius: 10px;
-            display: inline-block;
-            border: 2px solid #667eea;
-        }
-        
-        /* Animation "Pulse" pour le bouton start */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
-        
-        /* Classe pour cacher les questions au début */
-        .hidden-content {
-            display: none !important;
-        }
-        .eleve-box {
+#
+         .eleve-box {
             background: #ffffff;
             border: 2px solid #cfcfcf;
             border-radius: 10px;
@@ -537,7 +453,7 @@
         </div>
         
         
-        <div class="info-section" onclick="tenterDeverrouillage()">
+        <div class="info-section">
             <h3 style="margin-bottom: 15px; color: #333;">📝 Informations personnelles</h3>
             <div class="info-grid">
                 <div class="info-field">
@@ -572,17 +488,7 @@
                 </div>
             </div>
         </div>
-        <div class="start-section" id="startSection">
-    
-            <button class="btn-start" onclick="commencerDevoir()">
-                🚀 COMMENCER LE DEVOIR / ابدأ الفرض
-            </button>
-        
-            <div id="timerDisplay" class="timer-box" style="display: none;">
-                ⏳ Temps restant : <span id="timeValue">30:00</span>
-            </div>
-        
-        </div>
+
         <p class="instructions">Pour chaque composant, déterminez s'il est <strong>Interne ou Externe</strong> et indiquez sa <strong>Catégorie</strong>. Les composants sont randomisés à chaque ouverture!</p>
 
         <div class="bareme-section">
@@ -629,9 +535,9 @@
             ⚠️ Vous avez laissé des champs vides! Veuillez compléter correctement vos réponses avant de vérifier.
         </div>
 
-        <div class="questions-container hidden-content" id="questionsContainer"></div>
+        <div class="questions-container" id="questionsContainer"></div>
 
-        <div class="button-group hidden-content" id="actionButtons">
+        <div class="button-group">
             <button class="btn-primary" onclick="verifierReponses()">✓ Vérifier mes réponses</button>
             <button class="btn-secondary" onclick="reinitialiser()">↻ Réinitialiser</button>
             <button class="btn-print" id="printBtn" style="display:none;" onclick="imprimerDevoir()">🖨️ Imprimer</button>
@@ -962,109 +868,7 @@
             genererPDFDevoir(nom, classe);
         }
 
-        // --- GESTION DU DÉMARRAGE, DU TEMPS ET DU VERROUILLAGE ---
 
-        let tempsRestant = 30 * 60; // 30 minutes
-        let timerInterval;
-        let examenDemarre = false;
-        let infoVerrouillees = false;
-        
-        function commencerDevoir() {
-            const nom = document.getElementById('nomComplet').value;
-            const numero = document.getElementById('numero').value;
-            
-            // 1. Vérification avant de commencer
-            if (!nom || !numero) {
-                alert("⛔ Veuillez d'abord choisir votre classe et valider votre nom !");
-                document.querySelector('.info-section').scrollIntoView({ behavior: 'smooth' });
-                return;
-            }
-        
-            // 2. VERROUILLAGE DES INFOS
-            verrouillerInfos(true);
-        
-            // 3. Affichage du devoir
-            document.getElementById('questionsContainer').classList.remove('hidden-content');
-            
-            // AFFICHER LE BOUTON DE VALIDATION (C'est ici qu'on s'assure qu'il peut vérifier n'importe quand)
-            const btnGroup = document.querySelector('.button-group'); 
-            if(btnGroup) btnGroup.style.display = 'flex'; 
-            
-            // Masquer bouton start / Afficher Chrono
-            document.querySelector('.btn-start').style.display = 'none';
-            document.getElementById('timerDisplay').style.display = 'inline-block';
-        
-            // 4. Lancer le chrono
-            examenDemarre = true;
-            timerInterval = setInterval(updateTimer, 1000);
-        }
-        
-        // Fonction pour verrouiller/déverrouiller visuellement et techniquement
-        function verrouillerInfos(etat) {
-            infoVerrouillees = etat;
-            const section = document.getElementById('infoSection');
-            const inputs = section.querySelectorAll('input, select');
-        
-            if (etat) {
-                // ON VERROUILLE
-                section.classList.add('locked');
-                inputs.forEach(input => input.disabled = true);
-                // On garde le titre visible, mais le reste est grisé par le CSS
-            } else {
-                // ON DÉVERROUILLE
-                section.classList.remove('locked');
-                inputs.forEach(input => input.disabled = false);
-                // Le champ numéro reste toujours bloqué (readonly) de base, donc pas de souci
-                document.getElementById('numero').disabled = true; // On s'assure que lui reste bloqué
-            }
-        }
-        
-        // Fonction appelée quand on clique sur la zone des infos
-        function tenterDeverrouillage() {
-            // On ne fait rien si l'examen n'a pas commencé ou si c'est déjà déverrouillé
-            if (!examenDemarre || !infoVerrouillees) return;
-        
-            // Demander le mot de passe
-            const password = prompt("🔒 Modification interdite !\nEntrez le mot de passe pour modifier les informations :");
-        
-            if (password === "2026") {
-                verrouillerInfos(false); // Déverrouiller
-                alert("✅ Informations déverrouillées. Attention au chronomètre !");
-            } else if (password !== null) {
-                alert("❌ Mot de passe incorrect !");
-            }
-        }
-        
-        function updateTimer() {
-            let minutes = Math.floor(tempsRestant / 60);
-            let secondes = tempsRestant % 60;
-        
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            secondes = secondes < 10 ? '0' + secondes : secondes;
-        
-            const timerSpan = document.getElementById('timeValue');
-            timerSpan.textContent = `${minutes}:${secondes}`;
-        
-            if (tempsRestant < 300) { 
-                timerSpan.style.color = "#dc3545"; 
-                document.getElementById('timerDisplay').style.borderColor = "#dc3545";
-            }
-        
-            if (tempsRestant <= 0) {
-                clearInterval(timerInterval);
-                finDuTempsForcee();
-            }
-            tempsRestant--;
-        }
-        
-        function finDuTempsForcee() {
-            alert("⌛ TEMPS ÉCOULÉ ! \nLa correction va être lancée automatiquement.");
-            verifierReponses();
-            // Bloquer définitivement tout
-            document.querySelectorAll('input, select, button').forEach(el => el.disabled = true);
-            // Sauf le bouton imprimer s'il existe
-            if(document.getElementById('printBtn')) document.getElementById('printBtn').disabled = false;
-        }
         function createQuestions() {
             data = shuffleArray(allData);
             const container = document.getElementById('questionsContainer');
